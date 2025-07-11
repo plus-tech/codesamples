@@ -1,0 +1,14 @@
+.outer{
+	width: 50%;
+	height: 50%;
+	background-color:#ffff99;
+	transition-property: background-color;
+	/*transition-duration: 3s;*/
+	transition: 0.5s;
+}
+.outer:hover{
+	background-color: #66ccff;
+}
+th{
+	background-color: #66ccff;
+}

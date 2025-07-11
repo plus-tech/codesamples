@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Spring Web App</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <Script type="text/javascript">
+	    const inputForm = document.getElementById('inputForm');
+	    inputForm.addEventListener('submit', function(event) {
+	        // Prevent the default form submission (e.g., to handle it with AJAX)
+	        event.preventDefault();
+
+	        // Perform validation or other actions
+	        console.log('Form submitted!');
+	    });
+	    
+	    function searchOnClick(){
+		    	const searchForm = document.getElementById('searchForm');
+		    	let dptid = document.getElementById('dpt_id').value;
+		    	
+		    	if (dptid != null && dptid.trim() != ""){
+			    	searchForm.action = "/findById/" + dptid.trim();
+			} else {
+		    		searchForm.action = "/findalldpts";
+			}
+		    	searchForm.submit();
+		}
+	    
+	    function addOnClick(){
+	    		const btnText = document.getElementById("btnAdd").value;
+	    		const inputForm = document.getElementById('inputForm');
+	    		console.log(btnText);
+	    		if (btnText == "Add") {
+	    			document.getElementById("inputForm").style.display = "block";
+	    			document.getElementById("btnAdd").value = "Submit";
+	    		} else {
+	    			inputForm.submit();
+	    			document.getElementById("inputForm").style.display = "none";
+	    			document.getElementById("btnAdd").value = "Add";
+			}
+		}
+	    
+	    function cancelOnClick(){
+	    		document.getElementById("inputForm").style.display = "none";
+	    }
+    	    
+    </Script>
+    
+    <style type="text/css">
+	    .outer{
+			width: 50%;
+		}
+		input, a{
+			width: 180px;
+		}
+		#inputForm{
+			display: none;
+		}
+    </style>
+
+</head>
+<body>
+	<div class="container outer">
+	    <h2>Department Console</h2>
+	    <br/>
+	    <form id="searchForm" method="get">
+	    	<div class="row">
+	    		
+	    		<div class="col">Department ID</div>
+			<div class="col">
+				<input type="number" name="dpt_id" id="dpt_id"/>
+			</div>
+			<div class="col">
+				<input type="button" id="btnSearch" class="btn btn-outline-primary btn-sm" 
+						value="Search" onclick="searchOnClick()"/>
+			</div>
+		</div>
+		</form>
+		<br/>
+		
+	    <div class="row">
+		    <table class="table table-hover">
+		    		<thead>
+			    <tr class="table-primary">
+			    		<th>Department ID</th>
+			    		<th>Department Name</th>
+			    		<th>Manager ID</th>
+			    </tr>
+			    </thead>
+			    <tbody>
+			    <tr th:each="department : ${departments}">
+			        <td th:text="${department.department_id}">Id</td>
+			        <td th:text="${department.department_name}">Name</td>
+			        <td th:text="${department.manager_id}">Id</td>
+			    </tr>
+			    </tbody>
+
+		    </table>
+		</div>
+		
+		<div class="row">
+			<form id="inputForm" action="/insertDpt" method="post" th:object="${dptDto}">
+				<table class="table table-borderless">
+					<tr>
+						<td><input type="number" name="department_id" /></td>
+						<td><input type="text" name="department_name" /></td>
+						<td><input type="number" name="manager_id" /></td>
+					</tr>
+				</table>
+			</form> 
+		</div>
+		
+		<div class="row">
+			<div class="col">
+			</div>
+			<div class="col">
+				<input type="button" id="btnAdd" class="btn btn-outline-primary btn-sm" 
+				value="Add" onclick="addOnClick()"/>
+			</div>
+			<div class="col">
+				<input type="button"  class="btn btn-outline-primary btn-sm" 
+				value="Cancel" onclick="cancelOnClick()"/>
+			</div>
+		</div>
+		<br/>
+		<div class="row">
+			<div class="col"></div>
+			<div class="col"></div>
+			<div class="col">
+				<a href="/" class="btn btn-primary" type="button">Back</a>
+			</div>
+			
+		</div>  		
+
+	</div>
+</body>
+</html>
