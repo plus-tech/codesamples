@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 //@MapperScan("com.example._50_dao.mapper") // Package containing your Mapper interfaces
 public class SampleSpringMvcApplication {
 	private static final Logger log = LoggerFactory.getLogger(SampleSpringMvcApplication.class);
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(SampleSpringMvcApplication.class, args);
 	}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example._40_bizlogic.EmpBizLogic;
+import com.example._60_dto.EmpDptDto;
 import com.example._60_dto.EmpDto;
 
 /*
@@ -23,11 +24,15 @@ public class EmpService{
 	EmpBizLogic empBizLogic;
 	
 	@Transactional(value="primaryTransactionManager")
-	public List<EmpDto> getAll() {
-		return empBizLogic.getAll();
+	public List<EmpDto> findAll() {
+		return empBizLogic.findAll();
 	}
 	
 	public List<Map<String, Object>> leftJoin() {
 		return empBizLogic.leftJoin();
+	}
+	
+	public List<EmpDptDto> empLeftJoinDpt(){
+		return empBizLogic.empLeftJoinDpt();
 	}
 }

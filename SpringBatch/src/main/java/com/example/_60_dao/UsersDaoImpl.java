@@ -22,9 +22,12 @@ public class UsersDaoImpl implements UsersDao{
 	
 	
 	public ExitStatus truncateUsers() {
-		String truncSql = "truncate table users";
+		String truncUsers = "truncate table users";
+		String truncAuthorities = "truncate table authorities";
 		
-		jdbcTemplate.execute(truncSql);
+		jdbcTemplate.execute(truncUsers);
+		jdbcTemplate.execute(truncAuthorities);
+		
 		return ExitStatus.COMPLETED;
 	}
 	

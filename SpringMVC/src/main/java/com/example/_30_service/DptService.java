@@ -22,16 +22,27 @@ public class DptService{
 	DptBizLogic dptBizLogic;
 	
 	@Transactional(value="primaryTransactionManager")
-	public List<DptDto> getAll() {
-		return dptBizLogic.getAll();
+	public List<DptDto> findAll() {
+		return dptBizLogic.findAll();
 	}
 	
 	@Transactional(value="primaryTransactionManager")
 	public List<DptDto> findById(Long department_id) {
 		return dptBizLogic.findById(department_id);
 	}
+	
 	@Transactional(value="primaryTransactionManager")
 	public void insertDpt(DptDto dptDto) {
 		dptBizLogic.insertDpt(dptDto);
+	}
+	
+	@Transactional(value="primaryTransactionManager")
+	public void updateDpt(DptDto dptDto) {
+		dptBizLogic.updateDpt(dptDto);
+	}
+	
+	@Transactional(value="primaryTransactionManager")
+	public void deleteDpt(Long department_id) {
+		dptBizLogic.deleteDpt(department_id);
 	}
 }

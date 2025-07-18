@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Spring Web App</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+	<Script type="text/javascript">
+		var hideUploadForm = true;
+		
+	    function uploadOnClick(){
+		    	const uploadForm = document.getElementById('uploadForm');
+		    	
+		    	uploadForm.style.display = "block";
+	    }
+
+	</Script>
+    
+    <style type="text/css">
+    		
+    		.container{   			
+    			display: flex;
+    			flex-direction: column;
+    			align-items: center;
+    		}
+    		
+    		.container a {
+    			width: 200px;
+		}
+
+    </style>
+</head>
+<body>
+	<div class="container">
+		
+		<h2>Upload File</h2>
+		<br/>
+		<div class="d-grid gap-3">
+			<form id="uploadForm" method="POST" action="/uploaduserfile" 
+					enctype="multipart/form-data">
+			<div class="input-group">
+				<input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+				<button type="submit" class="btn btn-outline-secondary" id="inputGroupFileAddon04">Upload</button>
+			</div>
+			</form>
+
+			<div class="row justify-content-end">
+		    		<a href="/" class="btn btn-primary" type="button">Back</a>
+		    </div>
+		</div>
+		
+	</div>
+</body>
+</html>

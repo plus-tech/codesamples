@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,8 +29,9 @@ public class EmbeddedJdbcConfig {
 	/*
 	 * Embedded data source
 	 */
-	@Bean(name="dataSourceEmbedded")
-	public DataSource dataSourceEmbedded() {
+	@Qualifier("embedded")
+	@Bean(name="embeddedDataSource")
+	public DataSource embeddedDataSource() {
 		return new EmbeddedDatabaseBuilder()
 				.setType(EmbeddedDatabaseType.H2)
 				.setScriptEncoding("UTF-8")
@@ -40,21 +42,30 @@ public class EmbeddedJdbcConfig {
 	/*
 	 * JdbcTemplate for the Embedded database
 	 */	
-	@Bean(name="jdbcTemplateEmbedded")
-	public JdbcTemplate jdbcTemplateEmbedded(
-			@Qualifier("dataSourceEmbedded") DataSource dataSourceEmbedded) {
+	@Qualifier("embedded")
+	@Bean(name="embeddedJdbcTemplate")
+	public JdbcTemplate embeddedJdbcTemplate(
+			@Qualifier("embedded") DataSource dataSourceEmbedded) {
 		return new JdbcTemplate(dataSourceEmbedded);
 	}
 	
 	/*
 	 * SqlSessionFactoryBean for Mybatis
 	 */
+	@Qualifier("embedded")
 	@Bean("embeddedSqlSessionFactory")
-	public SqlSessionFactory sqlSessionFactory(
-			@Qualifier("dataSourceEmbedded") DataSource dataSource) throws Exception {
+	public SqlSessionFactory embeddedSqlSessionFactory(
+			@Qualifier("embedded") DataSource dataSource) throws Exception {
 		SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource);
 		return sessionFactory.getObject();
 	 }
-
+	
+	@Qualifier("embedded")
+	@Bean("embeddedSqlSessionTemplate")
+    public SqlSessionTemplate embeddedSqlSessionTemplate(
+    		@Qualifier("embedded") SqlSessionFactory embeddedSqlSessionFactory) {
+         
+		return new SqlSessionTemplate(embeddedSqlSessionFactory);
+	}
 }

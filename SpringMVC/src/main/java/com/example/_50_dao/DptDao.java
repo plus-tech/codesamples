@@ -8,5 +8,5 @@ import com.example._60_dto.DptDto;
 
 @Repository
 public interface DptDao {
-	public List<DptDto> getAll();
+	public List<DptDto> findAll();
 }

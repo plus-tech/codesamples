@@ -4,7 +4,9 @@ import javax.sql.DataSource;
 
 //import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +24,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 //@PropertySource("classpath:jdbc/jdbc.properties")
 @MapperScan(
 		  basePackages = "com.example._50_dao.mapper",
-		  sqlSessionFactoryRef = "primarySqlSessionFactory"
+		  sqlSessionFactoryRef = "oracleSqlSessionFactory"
 		)
 public class PrimaryJdbcConfig {
 			
@@ -31,8 +33,9 @@ public class PrimaryJdbcConfig {
 	 */
 //	@Bean(destroyMethod="close")
 	@Primary
-	@Bean(name="dataSourceOracle")
-    public DataSource dataSourceOracle(
+	@Qualifier("primary")
+	@Bean
+    public DataSource oracleDataSource(
     			@Value("${spring.datasource.driver-class-name}") String dsDriverClassName,
     			@Value("${spring.datasource.url}") String dsURL,
     			@Value("${spring.datasource.username}") String dsUsername,
@@ -51,25 +54,36 @@ public class PrimaryJdbcConfig {
 	 * JdbcTemplate for Oracle data source
 	 */
 	@Primary
-	@Bean(name="jdbcTemplateOracle")
-	public JdbcTemplate jdbcTemplateOracle(
-			@Qualifier("dataSourceOracle") DataSource dataSourceOracle) {
-		return new JdbcTemplate(dataSourceOracle);
+	@Qualifier("primary")
+	@Bean
+	public JdbcTemplate oracleJdbcTemplate(
+			@Qualifier("primary") DataSource oracleDataSource) {
+		return new JdbcTemplate(oracleDataSource);
 	}
 	
 	/*
 	 * SqlSessionFactoryBean for Mybatis
 	 */
 	@Primary
-	@Bean("primarySqlSessionFactory")
-	public SqlSessionFactoryBean sqlSessionFactory(
-			@Qualifier("dataSourceOracle") DataSource dataSourceOracle) {
+	@Qualifier("primary")
+	@Bean
+	public SqlSessionFactoryBean oracleSqlSessionFactory(
+			@Qualifier("primary") DataSource oracleDataSource) {
 		
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-		sessionFactoryBean.setDataSource(dataSourceOracle);
+		sessionFactoryBean.setDataSource(oracleDataSource);
 //		sessionFactoryBean.setConfigLocation(new ClassPathResource("/mybatis-config.xml"));
 		
 		return sessionFactoryBean;
+	}
+	
+	@Primary
+	@Qualifier("primary")
+	@Bean
+    public SqlSessionTemplate oracleSqlSessionTemplate(
+    		@Qualifier("primary") SqlSessionFactory oracleSqlSessionFactory) {
+         
+		return new SqlSessionTemplate(oracleSqlSessionFactory);
 	}
 
 }

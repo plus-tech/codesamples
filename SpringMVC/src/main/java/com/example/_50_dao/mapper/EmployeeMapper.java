@@ -20,4 +20,5 @@ public interface EmployeeMapper {
     void deleteEmp(Integer employee_id);
     
     List<Map<String, Object>> leftJoin();
+    List<EmpDptDto> empLeftJoinDpt();
 }

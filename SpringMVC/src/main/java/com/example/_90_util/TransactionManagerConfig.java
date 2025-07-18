@@ -3,6 +3,7 @@
  */
 package com.example._90_util;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -10,7 +11,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
     
-
 
 /**
  * 
@@ -20,18 +20,21 @@ public class TransactionManagerConfig {
 	
 	@Primary
     @Bean(name = "primaryTransactionManager")
-    public PlatformTransactionManager primaryTransactionManager(DataSource dataSourceOracle) {
-        return new DataSourceTransactionManager(dataSourceOracle);
+    public PlatformTransactionManager primaryTransactionManager(
+    		@Qualifier("primary") DataSource oracleDataSource) {
+        return new DataSourceTransactionManager(oracleDataSource);
     }
 
-    @Bean(name = "secondaryTransactionManager")
-    public PlatformTransactionManager secondaryTransactionManager(DataSource dataSourceMore) {
-        return new DataSourceTransactionManager(dataSourceMore);
+    @Bean(name = "testTransactionManager")
+    public PlatformTransactionManager testTransactionManager(
+    		@Qualifier("test") DataSource testDataSource) {
+        return new DataSourceTransactionManager(testDataSource);
     }
     
     @Bean(name = "embeddedTransactionManager")
-    public PlatformTransactionManager embeddedTransactionManager(DataSource dataSourceEmbedded) {
-        return new DataSourceTransactionManager(dataSourceEmbedded);
+    public PlatformTransactionManager embeddedTransactionManager(
+    		@Qualifier("embedded") DataSource embeddedDataSource) {
+        return new DataSourceTransactionManager(embeddedDataSource);
     }
 
 }

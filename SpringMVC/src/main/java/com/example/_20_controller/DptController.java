@@ -29,15 +29,15 @@ public class DptController{
 	@Autowired
 	private MessageSource msgSource;
 	
-	@GetMapping("/findById/{dpt_id}")
+	@GetMapping("/findById/{department_id}")
 	public ModelAndView findById(
-			@PathVariable Long dpt_id,
+			@PathVariable Long department_id,
 			ModelAndView mav) {
 		
 		System.out.println("-------- controller:");
-		System.out.println(dpt_id);
+		System.out.println(department_id);
 		
-		List<DptDto> dptList = dptService.findById(dpt_id);
+		List<DptDto> dptList = dptService.findById(department_id);
 		
 	    mav.setViewName("departments");
 	    mav.addObject("departments", dptList);
@@ -47,10 +47,10 @@ public class DptController{
 	
 //	@RequestMapping(value = "/", method = RequestMethod.GET)
 	@GetMapping("/findalldpts")
-	public ModelAndView findalldpts(ModelAndView mav) {
+	public ModelAndView findAllDpts(ModelAndView mav) {
 		String appHead = msgSource.getMessage(AppConstant.APP_HEAD, null, null);
 		
-		List<DptDto> dptlist = dptService.getAll();
+		List<DptDto> dptlist = dptService.findAll();
 		
 	    mav.setViewName("departments");
 	    mav.addObject("msg", appHead);
@@ -61,7 +61,7 @@ public class DptController{
 	
 //	@PostMapping("/insertDpt")
 	@RequestMapping(value = "/insertDpt", method = RequestMethod.POST)
-	public ModelAndView addDpt(
+	public ModelAndView insertDpt(
 			@ModelAttribute("dptDto") DptDto dptDto,
 			ModelAndView mav	) {
 		
@@ -69,7 +69,7 @@ public class DptController{
 		System.out.println(dptDto.toString());
 		dptService.insertDpt(dptDto);
 		
-		List<DptDto> dptlist = dptService.getAll();
+		List<DptDto> dptlist = dptService.findAll();
 		mav.addObject("departments", dptlist);
 		mav.setViewName("departments");
 		return mav;

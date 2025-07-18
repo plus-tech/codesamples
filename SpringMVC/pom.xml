@@ -17,7 +17,7 @@
 	<licenses>
 		<license/>
 	</licenses>
-	<!--
+
 	<profiles>
 		<profile>
 			<id>spring-data-next-releasetrain</id>
@@ -34,8 +34,7 @@
 		</profile>
 
 	</profiles>
-	-->
-	
+
 	<developers>
 		<developer/>
 	</developers>
@@ -93,6 +92,13 @@
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
 		
+		<!-- Swagger -->
+	    <dependency>
+	        <groupId>org.springdoc</groupId>
+	        <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	        <version>2.8.6</version>
+	    </dependency>
+		
 		<!-- Spring Boot DevTools -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -118,7 +124,7 @@
 		<dependency>
 		    <groupId>org.mybatis.spring.boot</groupId>
 		    <artifactId>mybatis-spring-boot-starter</artifactId>
-		    <version>3.0.3</version> <!-- Use the latest stable version -->
+		    <version>3.0.3</version>
 		</dependency>
 
         <!-- JPA 

@@ -21,8 +21,8 @@ public class DptBizLogic{
 	@Autowired
 	DepartmentMapper dptMapper;
 	
-	public List<DptDto> getAll() {
-//		return dptDao.getAll();
+	public List<DptDto> findAll() {
+//		return dptDao.findAll();
 		return dptMapper.findAll();
 	}
 	
@@ -32,5 +32,13 @@ public class DptBizLogic{
 	
 	public void insertDpt(DptDto dptDto) {
 		dptMapper.insertDpt(dptDto);
+	}
+	
+	public void updateDpt(DptDto dptDto) {
+		dptMapper.updateDpt(dptDto);
+	}
+	
+	public void deleteDpt(Long department_id) {
+		dptMapper.deleteDpt(department_id);
 	}
 }

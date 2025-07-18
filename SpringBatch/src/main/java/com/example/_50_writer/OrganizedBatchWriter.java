@@ -20,10 +20,7 @@ import com.zaxxer.hikari.HikariDataSource;
 @EnableBatchProcessing(
 		dataSourceRef = "dataSource")
 public class OrganizedBatchWriter {
-	
-//	@Autowired
-//	DataSource dataSource;
-	
+		
 //	@Qualifier("test")
 	@Autowired
 	DataSource dataSource;

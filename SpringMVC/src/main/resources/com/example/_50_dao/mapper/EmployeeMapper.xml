@@ -37,9 +37,16 @@
     
     <select id="leftJoin" resultType="map">
         SELECT e.employee_id, e.employee_name, e.salary, e.hire_date, e.manager_id, 
-        d.department_id, d.department_name, d.manager_id
+        d.department_id, d.department_name
         FROM employees e LEFT JOIN departments d
         ON e.department_id = d.department_id
     </select>
+    
+     <select id="empLeftJoinDpt" resultType="com.example._60_dto.EmpDptDto">
+        SELECT e.employee_id, e.employee_name, e.salary, e.hire_date, e.manager_id, 
+        d.department_id, d.department_name
+        FROM employees e LEFT JOIN departments d
+        ON e.department_id = d.department_id
+    </select>   
 
 </mapper>

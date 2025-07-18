@@ -29,15 +29,15 @@ import com.example._60_dto.DptDto;
 public class DptDaoImpl implements DptDao {
 	
 	@Autowired
-	@Qualifier("jdbcTemplateOracle")
-	private JdbcTemplate jdbcTemplateOracle;
+	@Qualifier("primary")
+	private JdbcTemplate oracleJdbcTemplate;
 	
 	public List<DptDto> getAllDpts(){
 		String sql = "SELECT department_id, department_name, manager_id FROM departments";
 	    	
 		List<DptDto> dptlist = null;
 		try {
-			dptlist = jdbcTemplateOracle.query(sql,
+			dptlist = oracleJdbcTemplate.query(sql,
 					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), rs.getString("department_name"), rs.getInt("manager_id"))
 			);
 		} catch (Exception e) {
@@ -51,14 +51,14 @@ public class DptDaoImpl implements DptDao {
 	 * JdbcTemplate - injected the primary
 	 */
 	@Autowired
-	@Qualifier("jdbcTemplateMore")
-	private JdbcTemplate jdbcTemplateMore;
+	@Qualifier("test")
+	private JdbcTemplate testJdbcTemplate;
 	
 	public List<DptDto> getAllDepartments() {
 
         String sql = "SELECT department_id, department_name, manager_id FROM departments WHERE department_id = 10";
     	
-        return jdbcTemplateMore.query(sql, new RowMapper<DptDto>() {
+        return testJdbcTemplate.query(sql, new RowMapper<DptDto>() {
             @Override
             public DptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             		DptDto dptdto = new DptDto();
@@ -74,14 +74,14 @@ public class DptDaoImpl implements DptDao {
 	 * Using a DataSource to query the database
 	 */
 	@Autowired
-	@Qualifier("dataSourceOracle")
-	private DataSource dataSource;
+	@Qualifier("primary")
+	private DataSource oracleDataSource;
 	
 	public List<DptDto> getAllDpt(){
 		List<DptDto> dptlist = new ArrayList<>();
 		String sql = "SELECT department_id, department_name, manager_id FROM departments WHERE department_id = 10";
 		
-		try (Connection connection = dataSource.getConnection();
+		try (Connection connection = oracleDataSource.getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet rs = statement.executeQuery(sql)) {
 			
@@ -98,7 +98,7 @@ public class DptDaoImpl implements DptDao {
 	}
 	
 	@Override
-	public List<DptDto> getAll() {
+	public List<DptDto> findAll() {
 		List<DptDto> dptlist = getAllDpts();
 //		List<DptDto> dptlist = getAllDepartments();
 //		List<DptDto> dptlist = getAllDpt();

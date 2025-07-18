@@ -3,11 +3,11 @@ package com.example._10_config;
 import javax.sql.DataSource;
 
 //import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -22,20 +22,21 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration(proxyBeanMethods = false)
 //@PropertySource("classpath:jdbc/jdbc.properties")
 @MapperScan(
-		  basePackages = "com.example._50_dao.moremapper",
-		  sqlSessionFactoryRef = "moreSqlSessionFactory"
+		  basePackages = "com.example._50_dao.testmapper",
+		  sqlSessionFactoryRef = "testSqlSessionFactory"
 		)
-public class MoreJdbcConfig {
+public class TestJdbcConfig {
 			
 	/*
-	 * One more data source
+	 * Test data source
 	 */
-	@Bean(name="dataSourceMore")
-    public DataSource dataSourceMore(
-    			@Value("${more.datasource.driver-class-name}") String dsDriverClassName,	
-    			@Value("${more.datasource.url}") String dsURL,	
-    			@Value("${more.datasource.username}") String dsUsername,	
-    			@Value("${more.datasource.password}") String dsPassword
+	@Qualifier("test")
+	@Bean(name="testDataSource")
+    public DataSource testDataSource(
+    			@Value("${test.datasource.driver-class-name}") String dsDriverClassName,	
+    			@Value("${test.datasource.url}") String dsURL,	
+    			@Value("${test.datasource.username}") String dsUsername,	
+    			@Value("${test.datasource.password}") String dsPassword
     		) {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(dsDriverClassName);
@@ -49,21 +50,31 @@ public class MoreJdbcConfig {
 	/*
 	 * One more JdbcTemplate
 	 */
-	@Bean(name="jdbcTemplateMore")
-	public JdbcTemplate jdbcTemplateMore(
-			@Qualifier("dataSourceMore") DataSource dataSourceMore) {
-		return new JdbcTemplate(dataSourceMore);
+	@Qualifier("test")
+	@Bean(name="testJdbcTemplate")
+	public JdbcTemplate testJdbcTemplate(
+			@Qualifier("test") DataSource testDataSource) {
+		return new JdbcTemplate(testDataSource);
 	}
 
 	/*
 	 * SqlSessionFactoryBean for Mybatis
 	 */	
-	@Bean("moreSqlSessionFactory")
-	 public SqlSessionFactory sqlSessionFactory(
-			 @Qualifier("dataSourceMore") DataSource dataSource) throws Exception {
+	@Qualifier("test")
+	@Bean(name="testSqlSessionFactory")
+	public SqlSessionFactory testSqlSessionFactory(
+			 @Qualifier("test") DataSource testDataSource) throws Exception {
 		  SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-		  sessionFactory.setDataSource(dataSource);
+		  sessionFactory.setDataSource(testDataSource);
 		  return sessionFactory.getObject();
-	 }
+	}
+	
+	@Qualifier("test")
+	@Bean
+    public SqlSessionTemplate testSqlSessionTemplate(
+    		@Qualifier("test") SqlSessionFactory testSqlSessionFactory) {
+         
+		return new SqlSessionTemplate(testSqlSessionFactory);
+	}
 
 }

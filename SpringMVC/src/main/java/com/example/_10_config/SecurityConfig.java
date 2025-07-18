@@ -45,6 +45,8 @@ public class SecurityConfig {
 	    return http.build();
 	}
 /*
+	//
+	// Create a user in memory
 	@Bean
 	public InMemoryUserDetailsManager userDetailsManager(){
 	    String username = "user";
@@ -62,21 +64,16 @@ public class SecurityConfig {
 	}
 */	
 	@Autowired
-	@Qualifier("dataSourceOracle")
-	private DataSource dataSourceOracle;
+	@Qualifier("primary")
+	private DataSource oracleDataSource;
 
 	@Bean
 	public UserDetailsManager userDetailsManager(){
-	  JdbcUserDetailsManager users = new JdbcUserDetailsManager(this.dataSourceOracle);
-	  
+	  JdbcUserDetailsManager users = new JdbcUserDetailsManager(this.oracleDataSource);
 	  /*
-	  users.createUser(makeUser("taro","yamada", "USER"));
-	  users.createUser(makeUser("hanako","flower", "USER"));
-	  users.createUser(makeUser("sachiko","happy", "USER"));
-	  users.createUser(makeUser("user","pass", "ADMIN"));
-	  users.createUser(makeUser("admin","kanri", "ADMIN"));
-	  */
-	  
+	  users.createUser(makeUser("user","pass", "USER"));
+	  users.createUser(makeUser("admin","pass", "ADMIN"));
+	  */	  
 	  return users;
 	}
 
