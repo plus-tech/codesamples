@@ -24,6 +24,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.example._70_dto.User;
 
+/*
+ * to be removed
+ */
 
 @Configuration
 @EnableBatchProcessing

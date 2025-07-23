@@ -20,7 +20,7 @@
 		    	let dptid = document.getElementById('dpt_id').value;
 		    	
 		    	if (dptid != null && dptid.trim() != ""){
-			    	searchForm.action = "/findById/" + dptid.trim();
+			    	searchForm.action = "/findbyid/" + dptid.trim();
 			} else {
 		    		searchForm.action = "/findalldpts";
 			}

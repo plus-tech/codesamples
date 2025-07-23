@@ -1,6 +1,12 @@
 package com.example._90_util;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /*
  * 
@@ -30,4 +36,11 @@ public final class AppConstant {
 	 * REST API root
 	 */
 	public static final String REST_ROOT = "/rest";
+
+	public static final String PATH_DPT_FINDALL = "/findalldpts";
+	public static final String PATH_DPT_FINDBYID = "/findbyid/{department_id}";
+	public static final String PATH_DPT_INSERT = "/insertdpt";
+	public static final String PATH_DPT_UPDATE = "/updatedpt";	
+	public static final String PATH_DPT_DELETE = "/deletedpt/{department_id}";
+	
 }

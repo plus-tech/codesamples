@@ -41,7 +41,7 @@ public class DptRestController {
 	MessageSource msgSource;
 	
 	
-	@GetMapping("/findalldpts")
+	@GetMapping(AppConstant.PATH_DPT_FINDALL)
 	@ResponseBody
 	@Operation(method="GET", description="Get the list of all the departments")
 	@ApiResponses(value= {
@@ -57,7 +57,7 @@ public class DptRestController {
 	    return dptList;
 	}
 	
-	@GetMapping("/findbyid/{department_id}")
+	@GetMapping(AppConstant.PATH_DPT_FINDBYID)
 	@ResponseBody
 	@Operation(method="GET", description="Get the department with the specified department id")
 	@ApiResponses(value= {
@@ -74,7 +74,7 @@ public class DptRestController {
 		return (dptList==null? null: dptList.getFirst());
 	}
 	
-	@PostMapping("/insertdpt")
+	@PostMapping(AppConstant.PATH_DPT_INSERT)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void insertDpt(
 			@RequestBody DptDto dptDto){
@@ -84,7 +84,7 @@ public class DptRestController {
 		dptService.insertDpt(dptDto);
 	}
 	
-	@PutMapping("/updatedpt")
+	@PutMapping(AppConstant.PATH_DPT_UPDATE)
 	public void updateDpt(
 			@RequestBody DptDto dptDto){
 		
@@ -93,7 +93,7 @@ public class DptRestController {
 		dptService.updateDpt(dptDto);
 	}
 	
-	@DeleteMapping("/deletedpt/{department_id}")
+	@DeleteMapping(AppConstant.PATH_DPT_DELETE)
 	public void deleteDpt(@PathVariable Long department_id){
 		
 		log.info(String.format("deleting department %d",department_id));

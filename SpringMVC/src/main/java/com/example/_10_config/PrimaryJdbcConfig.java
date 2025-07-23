@@ -10,6 +10,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,7 +19,11 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 
 /*
- * Create a customized DataSource
+ * Disable data source auto-configuration with "exclude" configuration option
+ *   @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
+ *   
+ * Define a data source in an explicit way
+ * If auto-configuration enabled, this configuration below can be removed.
  */
 
 @Configuration(proxyBeanMethods = false)
