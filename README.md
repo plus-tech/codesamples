@@ -27,8 +27,9 @@ SpringWebClient webClient = context.getBean(SpringWebClient.class);
 ```    
 Put all these together, DI is conceptually illustrated in the following diagram.    
 
-<img src="https://github.com/plus-tech/codesamples/blob/main/shared/img/di.jpg"  alt="Dependency Injection" />
-    
+<div align="center">
+<img src="https://github.com/plus-tech/codesamples/blob/main/shared/img/di.jpg"  alt="Dependency Injection" width="65%" />
+</div>    
     
 ### Aspect Oriented Programming (AOP)
 AOP, another core technology in Spring, is a methodology to design and implement cross-cutting concerns across classes. Here are the mostly used terms:
@@ -38,9 +39,10 @@ AOP, another core technology in Spring, is a methodology to design and implement
 <li>Join Point: when an advice is triggered, which is limited to the execution of methods in Spring AOP.</li>
 </ul>
     
-<img src="https://github.com/plus-tech/codesamples/blob/main/shared/img/aop.jpg"  alt="Aspect Oriented Programming" />
-    
-   
+<div align="center">
+<img src="https://github.com/plus-tech/codesamples/blob/main/shared/img/aop.jpg"  alt="Aspect Oriented Programming" width="90%" />
+</div>    
+<br/>
 Features included in each sample project are listed up as follows.
 
 ### Spring Web MVC
