@@ -44,7 +44,7 @@ public class SecurityConfig {
 //	    		.failureUrl();
 	    return http.build();
 	}
-/*
+
 	//
 	// Create a user in memory
 	@Bean
@@ -62,29 +62,27 @@ public class SecurityConfig {
 	    
 	    return new InMemoryUserDetailsManager(user);
 	}
-*/	
-	@Autowired
-	@Qualifier("primary")
-	private DataSource oracleDataSource;
 
-	@Bean
-	public UserDetailsManager userDetailsManager(){
-	  JdbcUserDetailsManager users = new JdbcUserDetailsManager(this.oracleDataSource);
-	  /*
-	  users.createUser(makeUser("user","pass", "USER"));
-	  users.createUser(makeUser("admin","pass", "ADMIN"));
-	  */	  
-	  return users;
-	}
 
-	private UserDetails makeUser(String user, String pass, String role) {
-	  return User.withUsername(user)
-	  .password(
-	  PasswordEncoderFactories
-	    .createDelegatingPasswordEncoder()
-	    .encode(pass))
-	    .roles(role)
-	    .build();
-	}
+//	@Bean
+//	public UserDetailsManager userDetailsManager(DataSource dataSource){
+//	  JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+//	  
+//	  // register users
+//	  users.createUser(makeUser("user","pass", "USER"));
+//	  users.createUser(makeUser("admin","pass", "ADMIN"));
+//	  
+//	  return users;
+//	}
+//
+//	private UserDetails makeUser(String user, String pass, String role) {
+//	  return User.withUsername(user)
+//	  .password(
+//	  PasswordEncoderFactories
+//	    .createDelegatingPasswordEncoder()
+//	    .encode(pass))
+//	    .roles(role)
+//	    .build();
+//	}
 
 }

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example._40_dao.DptDao;
 import com.example._40_dao.mapper.DepartmentMapper;
-import com.example._40_dao.testmapper.TestDepartmentMapper;
+import com.example._40_dao.sndmapper.SndDepartmentMapper;
 import com.example._50_dto.DptDto;
 
 /*
@@ -21,8 +21,8 @@ public class DptService{
 	DptDao dptDao;
 	
 	@Autowired
-	DepartmentMapper dptMapper;
-//	TestDepartmentMapper dptMapper;
+	SndDepartmentMapper dptMapper;
+//	DepartmentMapper dptMapper;
 	
 	public List<DptDto> findAll() {
 		List<DptDto> dptlist;
@@ -37,17 +37,17 @@ public class DptService{
 		return dptMapper.findById(department_id);
 	}
 	
-	@Transactional
+	@Transactional(value="transactionManager")
 	public void insertDpt(DptDto dptDto) {
 		dptMapper.insertDpt(dptDto);
 	}
 	
-	@Transactional
+	@Transactional(value="transactionManager")
 	public void updateDpt(DptDto dptDto) {
 		dptMapper.updateDpt(dptDto);
 	}
 	
-	@Transactional
+	@Transactional(value="transactionManager")
 	public void deleteDpt(Long department_id) {
 		dptMapper.deleteDpt(department_id);
 	}

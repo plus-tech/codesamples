@@ -13,31 +13,28 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration(proxyBeanMethods = false)
-public class TestDataSourceConfiguration {
+public class BcpDataSourceConfiguration {
 
-	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("bcp")
 	@Bean(defaultCandidate = false)
-	@ConfigurationProperties("test.datasource")
-	public DataSourceProperties testDataSourceProperties() {
+	@ConfigurationProperties("bcp.datasource")
+	public DataSourceProperties bcpDataSourceProperties() {
 		return new DataSourceProperties();
 	}
 
-	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("bcp")
 	@Bean(defaultCandidate = false)
-	@ConfigurationProperties("test.datasource.configuration")
-	public HikariDataSource testDataSource(
-			@Qualifier("testDataSourceProperties") DataSourceProperties testDataSourceProperties) {
-		return testDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+	@ConfigurationProperties("bcp.datasource.configuration")
+	public HikariDataSource bcpDataSource(
+			@Qualifier("bcpDataSourceProperties") DataSourceProperties dataSourceProperties) {
+		return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
 	}
 	
-	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("bcp")
 	@Bean(defaultCandidate = false)
-	public JdbcTemplate jdbcTemplateOracle(
-			@Qualifier("test") HikariDataSource testDataSource) {
-		return new JdbcTemplate(testDataSource);
+	public JdbcTemplate bcpJdbcTemplate(
+			@Qualifier("bcp") HikariDataSource dataSource) {
+		return new JdbcTemplate(dataSource);
 	}
 
 }

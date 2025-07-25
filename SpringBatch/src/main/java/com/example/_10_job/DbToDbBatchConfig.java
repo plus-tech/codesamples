@@ -12,7 +12,7 @@ import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.database.JdbcBatchItemWriter;
-import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.database.JdbcCursorItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -24,9 +24,9 @@ import com.example._70_dto.User;
 
 @Configuration
 @EnableBatchProcessing
-public class OrganizedBatchConfig {
+public class DbToDbBatchConfig {
 
-	public static final String JOB_NAME = "layeredFileToDbJob";
+	public static final String JOB_NAME = "DbToDbJob";
 	
 	@Autowired
 	public JobRepository jobRepository;
@@ -34,55 +34,68 @@ public class OrganizedBatchConfig {
 	@Autowired
 	public PlatformTransactionManager transactionManager;
 	
-	
-	@Bean(name="obImportUserJob")
-	public Job obImportUserJob() {
+	/*
+	 * Job flow
+	 */
+	@Bean(defaultCandidate = false)
+	@Qualifier("bcp")
+	public Job dtdImportUserJob() {
 		return new JobBuilder(JOB_NAME, jobRepository)
 				.incrementer(new RunIdIncrementer())
-				.validator(jobParametersValidator())
-				.start(truncateStep())
-				.next(importFileStep())
+				.validator(dtdJobParamValidator())
+				.start(truncateBcpStep())
+				.next(importUserStep())
 				.build();
 	}
 
-	@Bean
-	public JobParametersValidator jobParametersValidator() {
-		String[] requiredKeys = new String[]{"filePath"};
+	
+	@Qualifier("bcp")
+	@Bean(defaultCandidate = false)
+	public JobParametersValidator dtdJobParamValidator() {
+		String[] requiredKeys = new String[]{"requiredKeys"};
 		String[] optionalKeys = new String[]{"executedTime"};
 		
 		return new DefaultJobParametersValidator(requiredKeys, optionalKeys);
 	}
 	
+	/*
+	 * truncteStep: run a tasklet truncating users and authorities tables in bcp database
+	 */
 	@Autowired
-	@Qualifier("obTruncateStepTasklet")
-	MethodInvokingTaskletAdapter obTruncateStepTasklet;
+	@Qualifier("bcp")
+	MethodInvokingTaskletAdapter dtdTruncateStepTasklet;
 	
-	@Bean
-	public Step truncateStep() {
+	@Qualifier("bcp")
+	@Bean(defaultCandidate = false)
+	public Step truncateBcpStep() {
 		return new StepBuilder("truncateStep", jobRepository)
-				.tasklet(obTruncateStepTasklet, transactionManager)
+				.tasklet(dtdTruncateStepTasklet, transactionManager)
 				.build();
 	}
 	
+	/*
+	 * importUserStep: transfer data from the primary database to the bcp database
+	 */
 	@Autowired
-	@Qualifier("obImportFileStepReader")
-	FlatFileItemReader<User> obImportFileStepReader;
+	@Qualifier("bcp")
+	JdbcCursorItemReader<User> dtdImportUserStepReader;
 	
 	@Autowired
-	@Qualifier("obImportFileStepProcessor")
-	ItemProcessor<User, User> obImportFileStepProcessor;
+	@Qualifier("bcp")
+	ItemProcessor<User, User> dtdImportUserStepProcessor;
 	
 	@Autowired
-	@Qualifier("obImportFileStepWriter")
-	JdbcBatchItemWriter<User> obImportFileStepWriter;
+	@Qualifier("bcp")
+	JdbcBatchItemWriter<User> obImportUserStepWriter;
 	
-	@Bean
-	public Step importFileStep() {
+	@Qualifier("bcp")
+	@Bean(defaultCandidate = false)
+	public Step importUserStep() {
 		return new StepBuilder("importFileStep", jobRepository)
 				.<User, User>chunk(10, transactionManager)
-				.reader(obImportFileStepReader)
-				.processor(obImportFileStepProcessor)
-				.writer(obImportFileStepWriter)
+				.reader(	dtdImportUserStepReader)
+				.processor(dtdImportUserStepProcessor)
+				.writer(obImportUserStepWriter)
 				.build();
 	}
 

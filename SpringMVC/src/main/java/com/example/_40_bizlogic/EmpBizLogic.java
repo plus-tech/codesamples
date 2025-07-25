@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example._50_dao.EmpDao;
 import com.example._50_dao.mapper.EmployeeMapper;
 import com.example._60_dto.EmpDptDto;
 import com.example._60_dto.EmpDto;
@@ -20,8 +21,13 @@ public class EmpBizLogic{
 	@Autowired
 	EmployeeMapper empMapper;
 	
+	@Autowired
+	EmpDao empDao;  // connect to the secondary data source
+	
 	public List<EmpDto> findAll() {
-		return empMapper.findAll();
+//		return empMapper.findAll();
+		
+		return empDao.findAll();
 	}
 	
 	public EmpDto findById(Integer employee_id) {

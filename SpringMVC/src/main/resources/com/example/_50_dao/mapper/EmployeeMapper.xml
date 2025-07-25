@@ -4,26 +4,27 @@
 <mapper namespace="com.example._50_dao.mapper.EmployeeMapper">
 
     <select id="findAll" resultType="com.example._60_dto.EmpDto">
-        SELECT employee_id, employee_name, salary, hire_date, manager_id, department_id 
+        SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id 
         FROM employees
         ORDER BY employee_id
     </select>
 	
     <select id="findById" resultType="com.example._60_dto.EmpDto">
-        SELECT employee_id, employee_name, salary, hire_date, manager_id, department_id 
+        SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id 
         FROM departments 
         WHERE employee_id = #{employee_id}
     </select>
 
     <insert id="insertEmp" parameterType="com.example._60_dto.EmpDto">
-        INSERT INTO employees (employee_id, employee_name, salary, hire_date, manager_id, department_id) 
-        VALUES (#{employee_id}, #{employee_name}, #{salary}, #{hire_date}, #{manager_id}, #{department_id})
+        INSERT INTO employees (employee_id, first_name, last_name, salary, hire_date, manager_id, department_id) 
+        VALUES (#{employee_id}, #{first_name}, #{last_name}, #{salary}, #{hire_date}, #{manager_id}, #{department_id})
     </insert>
 
     <update id="updateEmp" parameterType="com.example._60_dto.EmpDto">
         UPDATE employees 
         SET employee_id = #{employee_id}, 
-        employee_name = #{employee_name}, 
+        first_name = #{first_name}, 
+        last_name = #{last_name},
         salary = #{salary}, 
         hire_date = #{hire_date},
         manager_id = #{manager_id}, 
@@ -36,14 +37,14 @@
     </delete>
     
     <select id="leftJoin" resultType="map">
-        SELECT e.employee_id, e.employee_name, e.salary, e.hire_date, e.manager_id, 
+        SELECT e.employee_id, e.first_name, e.last_name, e.salary, e.hire_date, e.manager_id, 
         d.department_id, d.department_name
         FROM employees e LEFT JOIN departments d
         ON e.department_id = d.department_id
     </select>
     
      <select id="empLeftJoinDpt" resultType="com.example._60_dto.EmpDptDto">
-        SELECT e.employee_id, e.employee_name, e.salary, e.hire_date, e.manager_id, 
+        SELECT e.employee_id, e.first_name, e.last_name, e.salary, e.hire_date, e.manager_id, 
         d.department_id, d.department_name
         FROM employees e LEFT JOIN departments d
         ON e.department_id = d.department_id

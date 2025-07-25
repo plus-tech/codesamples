@@ -12,12 +12,12 @@ import org.springframework.core.io.FileSystemResource;
 import com.example._70_dto.User;
 
 @Configuration
-public class OrganizedBatchReader {
+public class FileToDbBatchReader {
 
-	@Bean(name="obImportFileStepReader")
+	@Bean
 	@StepScope
 	@Value("#{jobParameters['filePath']}")  // get job parameter
-	public FlatFileItemReader<User> obImportFileStepReader(String filePath) {
+	public FlatFileItemReader<User> ftdImportFileStepReader(String filePath) {
 		return new FlatFileItemReaderBuilder<User>()
 				.name("UserItemReader")
 //				.resource(new ClassPathResource(filePath))

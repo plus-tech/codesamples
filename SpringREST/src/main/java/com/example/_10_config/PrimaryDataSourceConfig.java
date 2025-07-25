@@ -2,7 +2,6 @@ package com.example._10_config;
 
 import javax.sql.DataSource;
 
-//import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -10,12 +9,12 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
 
 /*
@@ -27,21 +26,19 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 
 @Configuration(proxyBeanMethods = false)
-//@PropertySource("classpath:jdbc/jdbc.properties")
 @MapperScan(
 		  basePackages = "com.example._50_dao.mapper",
-		  sqlSessionFactoryRef = "oracleSqlSessionFactory"
+		  sqlSessionFactoryRef = "sqlSessionFactory"
 		)
-public class PrimaryJdbcConfig {
+public class PrimaryDataSourceConfig {
 			
 	/*
 	 * Oracle data source
 	 */
-//	@Bean(destroyMethod="close")
 	@Primary
 	@Qualifier("primary")
 	@Bean
-    public DataSource oracleDataSource(
+    public DataSource dataSource(
     			@Value("${spring.datasource.driver-class-name}") String dsDriverClassName,
     			@Value("${spring.datasource.url}") String dsURL,
     			@Value("${spring.datasource.username}") String dsUsername,
@@ -62,10 +59,18 @@ public class PrimaryJdbcConfig {
 	@Primary
 	@Qualifier("primary")
 	@Bean
-	public JdbcTemplate oracleJdbcTemplate(
-			@Qualifier("primary") DataSource oracleDataSource) {
-		return new JdbcTemplate(oracleDataSource);
+	public JdbcTemplate jdbcTemplate(
+			@Qualifier("primary") DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
 	}
+
+	@Primary
+	@Qualifier("primary")
+    @Bean(name = "transactionManager")
+    public PlatformTransactionManager transactionManager(
+    		@Qualifier("primary") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
 	
 	/*
 	 * SqlSessionFactoryBean for Mybatis
@@ -73,23 +78,14 @@ public class PrimaryJdbcConfig {
 	@Primary
 	@Qualifier("primary")
 	@Bean
-	public SqlSessionFactoryBean oracleSqlSessionFactory(
-			@Qualifier("primary") DataSource oracleDataSource) {
+	public SqlSessionFactoryBean sqlSessionFactory(
+			@Qualifier("primary") DataSource dataSource) {
 		
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-		sessionFactoryBean.setDataSource(oracleDataSource);
+		sessionFactoryBean.setDataSource(dataSource);
 //		sessionFactoryBean.setConfigLocation(new ClassPathResource("/mybatis-config.xml"));
 		
 		return sessionFactoryBean;
-	}
-	
-	@Primary
-	@Qualifier("primary")
-	@Bean
-    public SqlSessionTemplate oracleSqlSessionTemplate(
-    		@Qualifier("primary") SqlSessionFactory oracleSqlSessionFactory) {
-         
-		return new SqlSessionTemplate(oracleSqlSessionFactory);
 	}
 
 }

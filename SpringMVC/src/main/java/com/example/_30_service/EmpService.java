@@ -23,7 +23,7 @@ public class EmpService{
 	@Autowired
 	EmpBizLogic empBizLogic;
 	
-	@Transactional(value="primaryTransactionManager")
+	@Transactional
 	public List<EmpDto> findAll() {
 		return empBizLogic.findAll();
 	}

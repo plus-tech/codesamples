@@ -29,15 +29,14 @@ import com.example._60_dto.DptDto;
 public class DptDaoImpl implements DptDao {
 	
 	@Autowired
-	@Qualifier("primary")
-	private JdbcTemplate oracleJdbcTemplate;
+	private JdbcTemplate jdbcTemplate;
 	
 	public List<DptDto> getAllDpts(){
 		String sql = "SELECT department_id, department_name, manager_id FROM departments";
 	    	
 		List<DptDto> dptlist = null;
 		try {
-			dptlist = oracleJdbcTemplate.query(sql,
+			dptlist = jdbcTemplate.query(sql,
 					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), rs.getString("department_name"), rs.getInt("manager_id"))
 			);
 		} catch (Exception e) {
@@ -51,14 +50,15 @@ public class DptDaoImpl implements DptDao {
 	 * JdbcTemplate - injected the primary
 	 */
 	@Autowired
-	@Qualifier("test")
-	private JdbcTemplate testJdbcTemplate;
+	@Qualifier("secondary")
+	private JdbcTemplate secondaryJdbcTemplate;
 	
 	public List<DptDto> getAllDepartments() {
 
-        String sql = "SELECT department_id, department_name, manager_id FROM departments WHERE department_id = 10";
+        String sql = "SELECT department_id, department_name, manager_id "
+        		+ "FROM departments";
     	
-        return testJdbcTemplate.query(sql, new RowMapper<DptDto>() {
+        return secondaryJdbcTemplate.query(sql, new RowMapper<DptDto>() {
             @Override
             public DptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
             		DptDto dptdto = new DptDto();
@@ -74,14 +74,14 @@ public class DptDaoImpl implements DptDao {
 	 * Using a DataSource to query the database
 	 */
 	@Autowired
-	@Qualifier("primary")
-	private DataSource oracleDataSource;
+	private DataSource dataSource;
 	
 	public List<DptDto> getAllDpt(){
 		List<DptDto> dptlist = new ArrayList<>();
-		String sql = "SELECT department_id, department_name, manager_id FROM departments WHERE department_id = 10";
+		String sql = "SELECT department_id, department_name, manager_id "
+				+ "FROM departments";
 		
-		try (Connection connection = oracleDataSource.getConnection();
+		try (Connection connection = this.dataSource.getConnection();
                 Statement statement = connection.createStatement();
                 ResultSet rs = statement.executeQuery(sql)) {
 			

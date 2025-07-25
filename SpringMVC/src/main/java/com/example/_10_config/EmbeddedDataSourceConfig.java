@@ -2,7 +2,6 @@ package com.example._10_config;
 
 import javax.sql.DataSource;
 
-//import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -16,22 +15,21 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 /*
- * Create a customized DataSource
+ * Configure the data source accessing the embedded database
  */
 
 @Configuration(proxyBeanMethods = false)
-//@PropertySource("classpath:jdbc/jdbc.properties")
 @MapperScan(
-		  basePackages = "com.example._50_dao.embeddedmapper",
-		  sqlSessionFactoryRef = "embeddedSqlSessionFactory"
+		  basePackages = "com.example._50_dao.ebdmapper",
+		  sqlSessionFactoryRef = "ebdSqlSessionFactory"
 		)
-public class EmbeddedJdbcConfig {
+public class EmbeddedDataSourceConfig {
 	/*
 	 * Embedded data source
 	 */
 	@Qualifier("embedded")
-	@Bean(name="embeddedDataSource")
-	public DataSource embeddedDataSource() {
+	@Bean(defaultCandidate = false)
+	public DataSource ebdDataSource() {
 		return new EmbeddedDatabaseBuilder()
 				.setType(EmbeddedDatabaseType.H2)
 				.setScriptEncoding("UTF-8")
@@ -40,21 +38,21 @@ public class EmbeddedJdbcConfig {
 	}
 
 	/*
-	 * JdbcTemplate for the Embedded database
+	 * JdbcTemplate for the embedded database
 	 */	
 	@Qualifier("embedded")
-	@Bean(name="embeddedJdbcTemplate")
-	public JdbcTemplate embeddedJdbcTemplate(
-			@Qualifier("embedded") DataSource dataSourceEmbedded) {
-		return new JdbcTemplate(dataSourceEmbedded);
+	@Bean(defaultCandidate = false)
+	public JdbcTemplate ebdJdbcTemplate(
+			@Qualifier("embedded") DataSource dataSource) {
+		return new JdbcTemplate(dataSource);
 	}
 	
 	/*
 	 * SqlSessionFactoryBean for Mybatis
 	 */
 	@Qualifier("embedded")
-	@Bean("embeddedSqlSessionFactory")
-	public SqlSessionFactory embeddedSqlSessionFactory(
+	@Bean(defaultCandidate = false)
+	public SqlSessionFactory ebdSqlSessionFactory(
 			@Qualifier("embedded") DataSource dataSource) throws Exception {
 		SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource);
@@ -62,10 +60,10 @@ public class EmbeddedJdbcConfig {
 	 }
 	
 	@Qualifier("embedded")
-	@Bean("embeddedSqlSessionTemplate")
-    public SqlSessionTemplate embeddedSqlSessionTemplate(
-    		@Qualifier("embedded") SqlSessionFactory embeddedSqlSessionFactory) {
+	@Bean(defaultCandidate = false)
+    public SqlSessionTemplate ebdSqlSessionTemplate(
+    		@Qualifier("embedded") SqlSessionFactory ebdSqlSessionFactory) {
          
-		return new SqlSessionTemplate(embeddedSqlSessionFactory);
+		return new SqlSessionTemplate(ebdSqlSessionFactory);
 	}
 }

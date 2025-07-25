@@ -16,10 +16,12 @@ import com.example._70_dto.User;
 @Repository
 public class UsersDaoImpl implements UsersDao{
 	
-//	@Qualifier("test")
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	
+
+	@Qualifier("bcp")
+	@Autowired
+	JdbcTemplate bcpJdbcTemplate;
 	
 	public ExitStatus truncateUsers() {
 		String truncUsers = "truncate table users";
@@ -53,12 +55,15 @@ public class UsersDaoImpl implements UsersDao{
         
 		return itemNum;
 	}
-}
 
-/*
-INSERT INTO your_table (column1, column2, column3) VALUES (?, ?, ?)
-String sql = "INSERT INTO your_table (column1, column2, column3) VALUES (?, ?, ?)";
-List<Object[]> batchArgs = new ArrayList<>();
-// Add data to batchArgs, e.g., batchArgs.add(new Object[]{"value1", "value2", "value3"});
-jdbcTemplate.batchUpdate(sql, batchArgs);
-*/
+	
+	public ExitStatus truncateBcpUsers() {
+		String truncUsers = "truncate table users";
+		String truncAuthorities = "truncate table authorities";
+		
+		bcpJdbcTemplate.execute(truncUsers);
+		bcpJdbcTemplate.execute(truncAuthorities);
+		
+		return ExitStatus.COMPLETED;
+	}
+}

@@ -5,14 +5,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.example.SampleSpringMvcApplication;
+import com.example.SpringMvcApplication;
 
 @Configuration
 public class LoggerConfig {
 	
 	@Bean
 	public Logger log() {
-		return(LoggerFactory.getLogger(SampleSpringMvcApplication.class));
+		return(LoggerFactory.getLogger(SpringMvcApplication.class));
 	}
 
 }

@@ -17,52 +17,53 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.zaxxer.hikari.HikariDataSource;
 
+
 @Configuration(proxyBeanMethods = false)
-@MapperScan(basePackages = "com.example._40_dao.testmapper",
-			sqlSessionFactoryRef = "testSqlSessionFactory")
-public class TestDataSourceConfiguration {
+@MapperScan(basePackages = "com.example._40_dao.sndmapper",
+			sqlSessionFactoryRef = "sndSqlSessionFactory")
+public class SecondaryDataSourceConfig {
 	
 //	@Profile("dev")
-//	@Qualifier("test")
+//	@Qualifier("secondary")
 //	@Bean(defaultCandidate = false)
-//	@ConfigurationProperties("test.datasource")
-//	public DataSourceProperties testDataSourceProperties() {
+//	@ConfigurationProperties("secondary.datasource")
+//	public DataSourceProperties sndDataSourceProperties() {
 //		return new DataSourceProperties();
 //	}
 //	
 //	@Profile("dev")
-//	@Qualifier("test")
+//	@Qualifier("secondary")
 //	@Bean(defaultCandidate = false)
-//	@ConfigurationProperties("test.datasource.configuration")
-//	public HikariDataSource testDataSource(
-//			@Qualifier("testDataSourceProperties") DataSourceProperties testDataSourceProperties) {
-//		return testDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
+//	@ConfigurationProperties("secondary.datasource.configuration")
+//	public HikariDataSource sndDataSource(
+//			@Qualifier("secondary") DataSourceProperties sndDataSourceProperties) {
+//		return sndDataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
 //	}
 	
 	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("secondary")
 	@Bean(defaultCandidate = false)
-    @ConfigurationProperties("test.datasource")
-    public DataSource testDataSource() {
+    @ConfigurationProperties("secondary.datasource")
+    public DataSource sndDataSource() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		
         return dataSource;
     }
 	
 	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("secondary")
 	@Bean(defaultCandidate = false)
-	public JdbcTemplate testJdbcTemplate(
-			@Qualifier("test") DataSource testDataSource) {
+	public JdbcTemplate sndJdbcTemplate(
+			@Qualifier("secondary") DataSource dataSource) {
 		
-		return new JdbcTemplate(testDataSource);
+		return new JdbcTemplate(dataSource);
 	}
 	
 	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("secondary")
     @Bean(defaultCandidate = false)
-    public PlatformTransactionManager testTransactionManager(
-    		@Qualifier("test") DataSource dataSource) {
+    public PlatformTransactionManager sndTransactionManager(
+    		@Qualifier("secondary") DataSource dataSource) {
 		
         return new DataSourceTransactionManager(dataSource);
     }
@@ -71,13 +72,13 @@ public class TestDataSourceConfiguration {
 	 * SqlSessionFactoryBean for Mybatis
 	 */
 	@Profile("dev")
-	@Qualifier("test")
+	@Qualifier("secondary")
 	@Bean(defaultCandidate = false)
-	public SqlSessionFactoryBean testSqlSessionFactory(
-			@Qualifier("test") DataSource testDataSource) {
+	public SqlSessionFactoryBean sndSqlSessionFactory(
+			@Qualifier("secondary") DataSource dataSource) {
 		
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-		sessionFactoryBean.setDataSource(testDataSource);
+		sessionFactoryBean.setDataSource(dataSource);
 		
 		return sessionFactoryBean;
 	}

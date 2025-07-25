@@ -17,17 +17,16 @@ import com.zaxxer.hikari.HikariDataSource;
 
 
 @Configuration
-@EnableBatchProcessing(
-		dataSourceRef = "dataSource")
-public class OrganizedBatchWriter {
+public class DbToDbBatchWriter {
 		
-//	@Qualifier("test")
 	@Autowired
+	@Qualifier("bcp")
 	DataSource dataSource;
 
-	@Bean(name="obImportFileStepWriter")
+	@Bean(defaultCandidate=false)
+	@Qualifier("bcp")
 	@StepScope
-	public JdbcBatchItemWriter<User> obImportFileStepWriter() {
+	public JdbcBatchItemWriter<User> dtdImportFileStepWriter() {
 		
 		String sql = "INSERT ALL "
 				+ "INTO users(id, username, password) VALUES (users_seq.nextval, :username, :password) "

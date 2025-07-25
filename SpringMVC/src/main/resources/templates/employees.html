@@ -16,7 +16,8 @@
 		    		<thead>
 				    <tr class="table-primary">
 				    		<th scope="col">Employee ID</th>
-				    		<th scope="col">Employee Name</th>
+				    		<th scope="col">First Name</th>
+				    		<th scope="col">Last Name</th>
 				    		<th scope="col">Salary</th>
 				    		<th scope="col">Hire Date</th>
 				    		<th scope="col">Manager ID</th>
@@ -26,7 +27,8 @@
 			    <tbody>
 				    <tr th:each="employee : ${employees}">
 				        <td th:text="${employee.employee_id}">200</td>
-				        <td th:text="${employee.employee_name}">Susan</td>
+				        <td th:text="${employee.first_name}">Susan</td>
+				        <td th:text="${employee.last_name}">Grant</td>
 				        <td th:text="${employee.salary}">6500</td>
 				        <td th:text="${employee.hire_date}">2010/01/01</td>
 				        <td th:text="${employee.manager_id}">100</td>

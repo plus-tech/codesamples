@@ -96,6 +96,6 @@ public class SpringWebClient {
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.bodyToMono(String.class);
-  }
+	}
   
 }

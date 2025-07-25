@@ -18,23 +18,16 @@ import javax.sql.DataSource;
 @Configuration
 public class TransactionManagerConfig {
 	
-	@Primary
-    @Bean(name = "primaryTransactionManager")
-    public PlatformTransactionManager primaryTransactionManager(
-    		@Qualifier("primary") DataSource oracleDataSource) {
-        return new DataSourceTransactionManager(oracleDataSource);
-    }
-
-    @Bean(name = "testTransactionManager")
-    public PlatformTransactionManager testTransactionManager(
-    		@Qualifier("test") DataSource testDataSource) {
-        return new DataSourceTransactionManager(testDataSource);
+    @Bean(name = "sndTransactionManager", defaultCandidate = false)
+    public PlatformTransactionManager sndTransactionManager(
+    		@Qualifier("secondary") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
     
-    @Bean(name = "embeddedTransactionManager")
-    public PlatformTransactionManager embeddedTransactionManager(
-    		@Qualifier("embedded") DataSource embeddedDataSource) {
-        return new DataSourceTransactionManager(embeddedDataSource);
+    @Bean(name = "ebdTransactionManager", defaultCandidate = false)
+    public PlatformTransactionManager ebdTransactionManager(
+    		@Qualifier("embedded") DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
     }
 
 }

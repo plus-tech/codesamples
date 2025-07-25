@@ -12,30 +12,46 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 
 
 @SpringBootApplication
 public class SpringBatchApplication {
 	
-	private static final Logger Log = LoggerFactory.getLogger(SpringBatchApplication.class);
+	private static final Logger log = LoggerFactory.getLogger(SpringBatchApplication.class);
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBatchApplication.class, args);
 	}
 
 	@Bean
-	public CommandLineRunner run(
+	@Order(1)
+	public CommandLineRunner runImportFileJob(
 			JobLauncher jobLauncher, 
-//			@Qualifier("importUserJob") Job importUserJob) {
-			@Qualifier("obImportUserJob") Job importUserJob,
+			Job importUserJob,
 			@Value("${import.path}") String importPath,
 			@Value("${file.users}") String fileUsers) {
 		
 	    return args -> {
 	        JobParameters jobParameters = new JobParametersBuilder()
-	        			.addString("filePath", importPath + fileUsers)
-	                .addLong("executedTime", System.currentTimeMillis())
-	                .toJobParameters();
+	        		.addString("filePath", importPath + fileUsers)
+	        		.addLong("executedTime", System.currentTimeMillis())
+	        		.toJobParameters();
+	        jobLauncher.run(importUserJob, jobParameters);
+	    };
+	}
+	
+	@Bean
+	@Order(2)
+	public CommandLineRunner runImportUserJob(
+			JobLauncher jobLauncher, 
+			@Qualifier("bcp") Job importUserJob) {
+		
+	    return args -> {
+	        JobParameters jobParameters = new JobParametersBuilder()
+	        		.addString("requiredKeys", "No keys required")
+	        		.addLong("executedTime", System.currentTimeMillis())
+	        		.toJobParameters();
 	        jobLauncher.run(importUserJob, jobParameters);
 	    };
 	}

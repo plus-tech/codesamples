@@ -5,7 +5,8 @@ public class User {
 	private String username;
 	private String password;
 	private String role;
-	
+
+
 	public User() {};
 
 	public User(Integer id, String username, String password, String role) {
@@ -49,5 +50,4 @@ public class User {
 	public void setRole(String role) {
 		this.role = role;
 	}
-
 }
