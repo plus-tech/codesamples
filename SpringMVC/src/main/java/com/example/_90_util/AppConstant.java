@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 
  */
 public final class AppConstant {
+	public static final String APP_NAME = "SpringMVC";
 	public static final String APP_TITLE = "app.title";
 	public static final String APP_HEAD = "app.head";
 	
@@ -42,5 +43,13 @@ public final class AppConstant {
 	public static final String PATH_DPT_INSERT = "/insertdpt";
 	public static final String PATH_DPT_UPDATE = "/updatedpt";	
 	public static final String PATH_DPT_DELETE = "/deletedpt/{department_id}";
+	
+	/*
+	 * DB access
+	 */
+	public static final String DB_ACCESS_MYBATIS = "Mybatis";
+	public static final String DB_ACCESS_DAO = "DAO";
+	public static final String DB_PRIMARY = "Primary";
+	public static final String DB_SECONDARY = "Secondary";
 	
 }

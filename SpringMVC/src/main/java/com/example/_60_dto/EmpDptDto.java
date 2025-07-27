@@ -64,7 +64,7 @@ public class EmpDptDto {
 	public String toString() {
 		return String.format(
 				"Employee-Department[employee_id='%d', first_name='%s', last_name='%s', salary='%f', "
-				+ "hire_date='%s', manager_id='%d', department_id=%d], department_name=%s",
+				+ "hire_date='%s', manager_id='%d', department_id=%d, department_name=%s]",
 				employee_id, first_name, last_name, salary, hire_date, manager_id, department_id, department_name);
 	}
 	

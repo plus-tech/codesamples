@@ -11,7 +11,7 @@
 	
     <select id="findById" resultType="com.example._60_dto.EmpDto">
         SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id 
-        FROM departments 
+        FROM employees 
         WHERE employee_id = #{employee_id}
     </select>
 

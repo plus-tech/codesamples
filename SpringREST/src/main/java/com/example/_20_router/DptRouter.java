@@ -22,6 +22,7 @@ import static org.springframework.web.reactive.function.server.RequestPredicates
 import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.util.ObjectUtils;
 
 import com.example._30_service.DptService;
 import com.example._50_dto.DptDto;
@@ -64,9 +65,14 @@ public class DptRouter {
 		
 		listDpt.forEach(dpt -> Log.info(String.format("--- %s", dpt.toString())));
 		
-		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(BodyInserters.fromValue(listDpt));
+		if (!ObjectUtils.isEmpty(listDpt)) {
+			return ServerResponse.ok()
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(BodyInserters.fromValue(listDpt));
+		} else {
+			return ServerResponse.notFound()
+					.build();
+		}
 	}
 
 	public Mono<ServerResponse> findById(ServerRequest request){
@@ -77,11 +83,15 @@ public class DptRouter {
 		Log.info("--- findById: %d".formatted(department_id));
 		List<DptDto> listDpt = dptService.findById(department_id);
 		
-		DptDto dptDto = listDpt==null? null: listDpt.getFirst();
-			
-		return ServerResponse.ok()
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(Mono.just(dptDto), DptDto.class);
+		if (!ObjectUtils.isEmpty(listDpt)) {
+
+			return ServerResponse.ok()
+					.contentType(MediaType.APPLICATION_JSON)
+					.body(Mono.just(listDpt.getFirst()), DptDto.class);
+		} else {
+			return ServerResponse.notFound()
+					.build();
+		}
 	}
 
 	

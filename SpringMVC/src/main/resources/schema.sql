@@ -7,8 +7,7 @@ CREATE TABLE Departments (
  , Manager_Id NUMBER(6)
 )
  NOLOGGING
- PARALLEL
-;
+ PARALLEL;
 
 CREATE TABLE Employees (
    Employee_Id NUMBER(6)
@@ -20,8 +19,14 @@ CREATE TABLE Employees (
  , Department_Id NUMBER(4)
 )
  NOLOGGING
- PARALLEL
-;
+ PARALLEL;
+
+CREATE TABLE App_Parameters (
+   AppName VARCHAR2(30) NOT NULL
+  ,Parameter VARCHAR2(30) NOT NULL
+  ,Value VARCHAR2(30)
+  ,CONSTRAINT app_parameters_pk PRIMARY KEY (App_Name, Parameter_Name)
+);
 
 
 --
@@ -33,8 +38,7 @@ WITH tabrows AS (
  SELECT 20, 'Marketing', 200 FROM DUAL UNION ALL
  SELECT 99, 'Dummy', null FROM DUAL
 )
-SELECT * FROM tabrows
-;
+SELECT * FROM tabrows;
 
 INSERT ALL
  INTO Employees VALUES(100, 'David', 'OConnell', 4800, '2010/01/01', null, 10)
@@ -42,5 +46,29 @@ INSERT ALL
  INTO Employees VALUES(200, 'Jennifer', 'Whalen', 4400, '2010/01/01', null, 20)
  INTO Employees VALUES(201, 'Bruce', 'Hartstein', 6000, '2010/12/31', 200, 20)
  INTO Employees VALUES(202, 'Pat', 'Fay', 6000, '2010/12/31', 200, 20)
-SELECT * FROM DUAL
-;
+SELECT * FROM DUAL;
+
+INSERT ALL 
+ INTO App_Parameters VALUES('SpringMVC', 'dptDbAccess', 'DAO')
+ INTO App_Parameters VALUES('SpringMVC', 'empDbAccess', 'Mybatis')
+ INTO App_Parameters VALUES('SpringMVC', 'dptCurrentDb', 'Primary')
+ INTO App_Parameters VALUES('SpringMVC', 'empCurrentDb', 'Secondary')
+ INTO App_Parameters VALUES('SpringREST', 'dptDbAccess', 'DAO')
+ INTO App_Parameters VALUES('SpringREST', 'empDbAccess', 'Mybatis')
+ INTO App_Parameters VALUES('SpringREST', 'dptCurrentDb', 'Primary')
+ INTO App_Parameters VALUES('SpringREST', 'empCurrentDb', 'Secondary')
+SELECT * FROM DUAL;
+
+SELECT * from (
+	SELECT appname, parameter, value 
+	FROM app_parameters
+	WHERE appname = #{appName}
+) PIVOT (
+	LISTAGG(value)
+	FOR PARAMETER IN (
+		'dptDbAccess' AS dptDbAccess,
+		'empDbAccess' AS empDbAccess,
+		'dptCurrentDb' AS dptCurrentDb,
+		'empCurrentDb' AS empCurrentDb
+	)
+);

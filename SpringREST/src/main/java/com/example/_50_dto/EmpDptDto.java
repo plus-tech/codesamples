@@ -19,7 +19,12 @@ public class EmpDptDto {
 	@NotNull
 	@Pattern(regexp="[a-zA-Z]*")
 	@Size(min=1, max=50, message="Name is too long")
-	private String employee_name;
+	private String first_name;
+
+	@NotNull
+	@Pattern(regexp="[a-zA-Z]*")
+	@Size(min=1, max=50, message="Name is too long")
+	private String last_name;
 	
 	private Double salary;
 	
@@ -38,14 +43,16 @@ public class EmpDptDto {
 	public EmpDptDto() {}
 	public EmpDptDto(
 				Integer employee_id,
-				String employee_name, 
+				String first_name, 
+				String last_name, 
 				Double salary,
 				String hire_date,
 				Integer manager_id,				
 				Long department_id,
 				String department_name) {
 		this.employee_id = employee_id;
-		this.employee_name = employee_name;
+		this.first_name = first_name;
+		this.last_name = last_name;
 		this.salary = salary;
 		this.hire_date = hire_date;
 		this.manager_id = manager_id;
@@ -56,9 +63,9 @@ public class EmpDptDto {
 	@Override
 	public String toString() {
 		return String.format(
-				"Employee-Department[employee_id='%d', employee_name='%s', salary='%f', "
-				+ "hire_date='%s', manager_id='%d', department_id=%d], department_name=%s",
-				employee_id, employee_name, salary, hire_date, manager_id, department_id, department_name);
+				"Employee-Department[employee_id='%d', first_name='%s', last_name='%s', salary='%f', "
+				+ "hire_date='%s', manager_id='%d', department_id=%d, department_name=%s]",
+				employee_id, first_name, last_name, salary, hire_date, manager_id, department_id, department_name);
 	}
 	
 	public Integer getEmployee_id() {
@@ -68,13 +75,20 @@ public class EmpDptDto {
 		this.employee_id = employee_id;
 	}
 
-	public String getEmployee_name() {
-		return employee_name;
+	public String getFirst_name() {
+		return first_name;
 	}
-	public void setEmployee_name(String department_name) {
-		this.employee_name = department_name;
+	public void setFirst_name(String first_name) {
+		this.first_name = first_name;
 	}
 
+	public String getLast_name() {
+		return last_name;
+	}
+	public void setLast_name(String last_name) {
+		this.last_name = last_name;
+	}
+	
 	public Double getSalary() {
 		return salary;
 	}

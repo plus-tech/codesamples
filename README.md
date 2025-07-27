@@ -12,7 +12,7 @@ Spring Boot also provides a bunch of non-functional features, such as embedded w
 ### Dependency Injection (DI)
 For example, we would like to access the database using JDBC, so we create a DAO object, in which a JdbcTemplate object is used to execute queries. Will we need to programmatically new a JdbcTemplate object by ourselves? Of course no, we won't because the container, to be more specific, IoC container in Spring, will instantiate it. We just need to inject it into our DAO object with @Autowired annotation.     
 It is common that an object depends on some other objects performing some tasks, which could be Spring default objects or user defined objects. As long as we define these dependencies, the container will automatically inject them when it creates that object, which We also call a bean.    
-Dependency injection, a core technology in Spring, frees us of bean instantiation and their dependency relationship construction. We simply inject the beans in need and use them to complete the tasks; this enables us to focus more on programming user specific functions, specifically business logics.     
+Dependency injection, a core technology in Spring, frees us of bean instantiation and their dependency relationship constructs. We simply inject the beans in need and use them to complete the tasks; this enables us to focus more on programming user specific functions, specifically business logics.     
 How does the container identify those beans? We need to tell it through configurations. Specifically, there are three types of configuration:  
 <ul>
 	<li>Java-based configuration(@Bean)</li>

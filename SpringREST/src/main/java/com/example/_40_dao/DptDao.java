@@ -9,7 +9,8 @@ import com.example._50_dto.DptDto;
 @Repository
 public interface DptDao {
 	public List<DptDto> findAll();
-	public DptDto createDpt(DptDto dptDto);
+	public List<DptDto> findById(Long department_id);
+	public DptDto insertDpt(DptDto dptDto);
 	public DptDto updateDpt(DptDto dptDto);
 	public void deleteDpt(Long department_id);
 }

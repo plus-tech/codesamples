@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example._30_service.DptService;
 import com.example._60_dto.DptDto;
 import com.example._90_util.AppConstant;
+
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -71,7 +73,7 @@ public class DptRestController {
 		
 		log.info(dptList.toString());
 		
-		return (dptList==null? null: dptList.getFirst());
+		return (ObjectUtils.isEmpty(dptList)? null: dptList.getFirst());
 	}
 	
 	@PostMapping(AppConstant.PATH_DPT_INSERT)

@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example._40_dao.mapper.EmployeeMapper;
+import com.example._40_dao.EmpDao;
+import com.example._40_dao.sndmapper.SndEmployeeMapper;
 import com.example._50_dto.EmpDptDto;
 import com.example._50_dto.EmpDto;
 
@@ -18,9 +19,14 @@ import com.example._50_dto.EmpDto;
 public class EmpService{
 	
 	@Autowired
-	EmployeeMapper empMapper;
+	EmpDao empDao;
+	
+	@Autowired
+	SndEmployeeMapper empMapper;
 	
 	public List<EmpDto> findAll() {
+//		return empDao.findAll();
+		
 		return empMapper.findAll();
 	}
 	

@@ -14,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 
 import com.example._50_dto.DptDto;
 
@@ -23,9 +24,8 @@ import com.example._50_dto.DptDto;
 @Repository
 public class DptDaoImpl implements DptDao {
 
-//	@Qualifier("test")
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	JdbcTemplate jdbcTemplate;
 
 	@Override
 	public List<DptDto> findAll(){	
@@ -40,7 +40,7 @@ public class DptDaoImpl implements DptDao {
 			System.out.println(e);
 		}
 		
-//		List<DptDto> dptlist = getAllDpts();
+//		List<DptDto> dptlist = findAllDpts();
 		
 		return dptlist;
 	}
@@ -48,9 +48,10 @@ public class DptDaoImpl implements DptDao {
 	/*
 	 * RowMapper - another way to get data from a record set
 	 */
-	public List<DptDto> getAllDpts() {
+	public List<DptDto> findAllDpts() {
 
-        String sql = "SELECT department_id, department_name, manager_id FROM departments WHERE department_id = 10";
+        String sql = "SELECT department_id, department_name, manager_id "
+        		+ "FROM departments ";
     	
         List<DptDto> dptlist = null;
         try {
@@ -71,8 +72,33 @@ public class DptDaoImpl implements DptDao {
         return dptlist;
 	}
 	
+	public List<DptDto> findById(Long department_id){
+
+        String sql = "SELECT department_id, department_name, manager_id "
+        		+ "FROM departments "
+        		+ "WHERE department_id = ?";
+    	
+        List<DptDto> dptlist = null;
+        try {
+	        	dptlist = jdbcTemplate.query(sql, new Object[] {department_id}, new int[] {Types.INTEGER}, new RowMapper<DptDto>() {
+	            @Override
+	            public DptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+	            		DptDto dptdto = new DptDto();
+	            		dptdto.setDepartment_id(rs.getLong("department_id"));
+	            		dptdto.setDepartment_name(rs.getString("department_name"));
+	            		dptdto.setManager_id(rs.getInt("manager_id"));
+	                return dptdto;
+	            }
+	        });        	
+        } catch (Exception e) {
+        		System.out.println(e);
+        }
+        
+        return dptlist;
+	}
+	
 	@Override
-	public DptDto createDpt(DptDto dptDto) {
+	public DptDto insertDpt(DptDto dptDto) {
 
 	    String sql="insert into "
 	    		+ "departments(department_id, department_name, manager_id) "

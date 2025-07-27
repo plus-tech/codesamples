@@ -1,4 +1,4 @@
-package com.example._50_dao;
+package com.example._40_dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,8 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.example._60_dto.EmpDto;
-
+import com.example._50_dto.EmpDto;
 
 @Repository
 public class EmpDaoImpl implements EmpDao {
@@ -20,8 +19,8 @@ public class EmpDaoImpl implements EmpDao {
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
-	
-	public List<EmpDto> findAll(){
+	@Override
+	public List<EmpDto> findAll() {
         String sql = "SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id "
         		+ "FROM employees "
         		+ "ORDER BY employee_id";

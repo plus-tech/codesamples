@@ -6,6 +6,7 @@ import reactor.core.publisher.Mono;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -39,7 +40,12 @@ public class SpringWebClient {
 				.uri(uri)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
-				.bodyToFlux(DptDto.class);
+				.onStatus(status -> status.equals(HttpStatus.NOT_FOUND), 
+		                  clientResponse -> Mono.error(new Exception("Departments not found")))
+				.bodyToFlux(DptDto.class)
+				.onErrorResume(Exception.class, e -> {
+		            return Flux.empty(); 
+		        });
 	}
 	
 
@@ -53,8 +59,12 @@ public class SpringWebClient {
 				.uri(uri)
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
-				.bodyToMono(DptDto.class);
-		//        .map(DptDto::getDepartment_name);
+				.onStatus(status -> status.equals(HttpStatus.NOT_FOUND), 
+		                  clientResponse -> Mono.error(new Exception("Department not found")))
+				.bodyToMono(DptDto.class)
+				.onErrorResume(Exception.class, e -> {
+		            return Mono.empty(); 
+		        });
 	}
 
 	public Mono<String> insertDpt(DptDto dptDto) {

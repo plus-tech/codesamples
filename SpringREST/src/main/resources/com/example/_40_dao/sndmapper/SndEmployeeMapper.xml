@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example._40_dao.mapper.EmployeeMapper">
+<mapper namespace="com.example._40_dao.sndmapper.SndEmployeeMapper">
 
     <select id="findAll" resultType="com.example._50_dto.EmpDto">
         SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id 

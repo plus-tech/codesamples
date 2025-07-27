@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example._50_dao.mapper.AppParameterMapper">
+
+    <select id="getParameters" resultType="com.example._60_dto.Parameters">
+        SELECT * from (
+			SELECT appname, parameter, value 
+			FROM app_parameters
+			WHERE appname = #{appName}
+		) PIVOT (
+			LISTAGG(value)
+			FOR PARAMETER IN (
+				'dptDbAccess' AS dptDbAccess,
+				'empDbAccess' AS empDbAccess,
+				'dptCurrentDb' AS dptCurrentDb,
+				'empCurrentDb' AS empCurrentDb
+			)
+		)
+    </select>
+
+</mapper>

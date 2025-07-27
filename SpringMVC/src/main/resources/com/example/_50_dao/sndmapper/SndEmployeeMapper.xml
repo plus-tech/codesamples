@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example._40_dao.mapper.EmployeeMapper">
+<mapper namespace="com.example._50_dao.sndmapper.SndEmployeeMapper">
 
-    <select id="findAll" resultType="com.example._50_dto.EmpDto">
+    <select id="findAll" resultType="com.example._60_dto.EmpDto">
         SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id 
         FROM employees
         ORDER BY employee_id
     </select>
 	
-    <select id="findById" resultType="com.example._50_dto.EmpDto">
+    <select id="findById" resultType="com.example._60_dto.EmpDto">
         SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id 
         FROM employees 
         WHERE employee_id = #{employee_id}
     </select>
 
-    <insert id="insertEmp" parameterType="com.example._50_dto.EmpDto">
+    <insert id="insertEmp" parameterType="com.example._60_dto.EmpDto">
         INSERT INTO employees (employee_id, first_name, last_name, salary, hire_date, manager_id, department_id) 
         VALUES (#{employee_id}, #{first_name}, #{last_name}, #{salary}, #{hire_date}, #{manager_id}, #{department_id})
     </insert>
 
-    <update id="updateEmp" parameterType="com.example._50_dto.EmpDto">
+    <update id="updateEmp" parameterType="com.example._60_dto.EmpDto">
         UPDATE employees 
         SET employee_id = #{employee_id}, 
         first_name = #{first_name}, 
@@ -43,7 +43,7 @@
         ON e.department_id = d.department_id
     </select>
     
-     <select id="empLeftJoinDpt" resultType="com.example._50_dto.EmpDptDto">
+     <select id="empLeftJoinDpt" resultType="com.example._60_dto.EmpDptDto">
         SELECT e.employee_id, e.first_name, e.last_name, e.salary, e.hire_date, e.manager_id, 
         d.department_id, d.department_name
         FROM employees e LEFT JOIN departments d
