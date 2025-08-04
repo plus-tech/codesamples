@@ -29,7 +29,7 @@ public class EmpController{
 	
 	
 //	@RequestMapping(value = "/", method = RequestMethod.GET)
-	@GetMapping("/findallemps")
+	@GetMapping(AppConstant.PATH_EMP_FINDALL)
 	public ModelAndView findAllEmps(ModelAndView mav) {
 		String appHead = msgSource.getMessage(AppConstant.APP_HEAD, null, null);
 		
@@ -45,11 +45,11 @@ public class EmpController{
 		List<EmpDptDto> empdptList = empService.empLeftJoinDpt();
 		System.out.println(empdptList);
 		
-	    mav.setViewName("employees");
-	    mav.addObject("msg", appHead);
-	    mav.addObject("employees", emplist);
+		mav.setViewName(AppConstant.VIEW_EMPLOYEE);
+		mav.addObject("apphead", appHead);
+		mav.addObject("employees", emplist);
 	    
-	    return mav;
+		return mav;
 	}
 
 }

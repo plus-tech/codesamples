@@ -26,7 +26,7 @@ import com.example._60_dto.DptDto;
 public class DptDaoImpl implements DptDao {
 	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;	
+	JdbcTemplate jdbcTemplate;	
 	
 	/*
 	 * query the database with JdbcTemplate

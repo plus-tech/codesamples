@@ -29,7 +29,7 @@ public class DbToDbBatchWriter {
 	public JdbcBatchItemWriter<User> dtdImportFileStepWriter() {
 		
 		String sql = "INSERT ALL "
-				+ "INTO users(id, username, password) VALUES (users_seq.nextval, :username, :password) "
+				+ "INTO users(id, username, password, enabled) VALUES (users_seq.nextval, :username, :password, :enabled) "
 				+ "INTO authorities(username, authority) VALUES (:username, :role) "
 				+ "SELECT * FROM DUAL";
 		

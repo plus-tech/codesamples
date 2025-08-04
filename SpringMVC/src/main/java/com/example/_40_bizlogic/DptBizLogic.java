@@ -27,10 +27,14 @@ public class DptBizLogic{
 	
 		
 	public List<DptDto> findAll() {
-		return dptDao.findAll();
+		return dptMapper.findAll();
+//		return dptDao.findAll();
 	}
 	
 	public List<DptDto> findById(Long department_id){
+		AppParameters.getInstance().setDptDbAccess(AppConstant.DB_ACCESS_DAO);
+//		AppParameters.getInstance().setDptDbAccess(AppConstant.DB_ACCESS_MYBATIS);
+		
 		if (AppParameters.getInstance().getDptDbAccess().equals(AppConstant.DB_ACCESS_DAO)) {
 			System.out.println(">> findById: DAO access");
 			

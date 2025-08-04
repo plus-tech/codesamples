@@ -11,6 +11,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
@@ -75,5 +76,16 @@ public class SecondaryDataSourceConfig {
          
 		return new SqlSessionTemplate(sqlSessionFactory);
 	}
+	
+//	@Qualifier("secondary")
+//	@Bean(defaultCandidate = false)
+//    public SqlSessionFactoryBean sndSqlSessionFactory(
+//    		@Qualifier("secondary") DataSource dataSource) {
+//		
+//		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
+//		sessionFactoryBean.setDataSource(dataSource);
+//		
+//		return sessionFactoryBean;
+//	}
 
 }

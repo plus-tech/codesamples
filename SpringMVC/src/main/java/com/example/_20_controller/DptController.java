@@ -82,8 +82,7 @@ public class DptController{
 	public ModelAndView updateDpt(
 			@ModelAttribute("dptDto") DptDto dptDto,
 			ModelAndView mav	){
-		
-		System.out.println(String.format(">> updating department %s", dptDto.toString()));
+			System.out.println(String.format(">> updating department %s", dptDto.toString()));
 		dptService.updateDpt(dptDto);
 		
 		List<DptDto> dptlist = dptService.findAll();

@@ -24,10 +24,8 @@ public class DptService{
 	DepartmentMapper dptMapper;
 	
 	public List<DptDto> findAll() {
-		List<DptDto> dptlist;
-		
-		dptlist = dptDao.findAll();
-//		dptlist = dptMapper.findAll();
+		List<DptDto> dptlist = dptDao.findAll();
+//		List<DptDto> dptlist = dptMapper.findAll();
 		
 		return dptlist;
 	}

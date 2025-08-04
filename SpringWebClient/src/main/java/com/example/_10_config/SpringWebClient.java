@@ -33,7 +33,7 @@ public class SpringWebClient {
 	public Flux<DptDto> findAllDpts() {
 		Log.info("--- findAllDpts");
 		
-		String uri = AppConstant.REST_ROOT + AppConstant.REST_DPT_FINDALL;
+		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_FINDALL;
 		
 		return this.webClient
 				.get()
@@ -52,7 +52,7 @@ public class SpringWebClient {
 	public Mono<DptDto> findById(Long department_id) {
 		Log.info("--- findById : " + Long.toString(department_id));
 		
-		String uri = AppConstant.REST_ROOT + AppConstant.REST_DPT_FINDBYID + Long.toString(department_id);
+		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_FINDBYID + Long.toString(department_id);
 		
 		return this.webClient
 				.get()
@@ -70,7 +70,7 @@ public class SpringWebClient {
 	public Mono<String> insertDpt(DptDto dptDto) {
 		Log.info("--- insertDpt : " + dptDto.toString());
 		
-		String uri = AppConstant.REST_ROOT + AppConstant.REST_DPT_INSERT;
+		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_INSERT;
 			
 		return this.webClient
 				.post()
@@ -84,7 +84,7 @@ public class SpringWebClient {
 	public Mono<String> updateDpt(DptDto dptDto) {
 		Log.info("--- updateDpt : " + dptDto.toString());
 		
-		String uri = AppConstant.REST_ROOT + AppConstant.REST_DPT_UPDATE;
+		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_UPDATE;
 			
 		return this.webClient
 				.put()
@@ -98,7 +98,7 @@ public class SpringWebClient {
 	public Mono<String> deleteDpt(Long department_id){
 		Log.info("--- deleteDpt : " + Long.toString(department_id));
 		
-		String uri = AppConstant.REST_ROOT + AppConstant.REST_DPT_DELETE + Long.toString(department_id);
+		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_DELETE + Long.toString(department_id);
 		
 		return this.webClient
 				.delete()

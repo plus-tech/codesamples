@@ -25,6 +25,7 @@ public class FileToDbBatchProcessor {
 					.createDelegatingPasswordEncoder()
 					.encode(item.getPassword()));
 			item.setRole("ROLE_"+item.getRole());
+			item.setEnabled(item.getEnabled());	
 			
 			return item;
 		};

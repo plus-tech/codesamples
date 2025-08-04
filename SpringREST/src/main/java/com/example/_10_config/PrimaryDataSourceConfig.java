@@ -7,7 +7,6 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -33,10 +32,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 public class PrimaryDataSourceConfig {
 			
 	/*
-	 * Oracle data source
+	 * Primary data source
 	 */
 	@Primary
-	@Qualifier("primary")
 	@Bean
     public DataSource dataSource(
     			@Value("${spring.datasource.driver-class-name}") String dsDriverClassName,
@@ -54,21 +52,19 @@ public class PrimaryDataSourceConfig {
 	}
 	
 	/*
-	 * JdbcTemplate for Oracle data source
+	 * JdbcTemplate for primary data source
 	 */
 	@Primary
-	@Qualifier("primary")
 	@Bean
 	public JdbcTemplate jdbcTemplate(
-			@Qualifier("primary") DataSource dataSource) {
+			DataSource dataSource) {
 		return new JdbcTemplate(dataSource);
 	}
 
 	@Primary
-	@Qualifier("primary")
     @Bean(name = "transactionManager")
     public PlatformTransactionManager transactionManager(
-    		@Qualifier("primary") DataSource dataSource) {
+    		DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
     }
 	
@@ -76,10 +72,9 @@ public class PrimaryDataSourceConfig {
 	 * SqlSessionFactoryBean for Mybatis
 	 */
 	@Primary
-	@Qualifier("primary")
 	@Bean
 	public SqlSessionFactoryBean sqlSessionFactory(
-			@Qualifier("primary") DataSource dataSource) {
+			DataSource dataSource) {
 		
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
 		sessionFactoryBean.setDataSource(dataSource);

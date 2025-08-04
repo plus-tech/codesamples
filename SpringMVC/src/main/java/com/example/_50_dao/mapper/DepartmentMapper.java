@@ -14,7 +14,7 @@ import com.example._60_dto.*;
 public interface DepartmentMapper {
 	List<DptDto> findAll();
 	List<DptDto> findById(Long department_id);
-    void insertDpt(DptDto dptDto);
-    void updateDpt(DptDto dptDto);
-    void deleteDpt(Long department_id);
+	void insertDpt(DptDto dptDto);
+	void updateDpt(DptDto dptDto);
+	void deleteDpt(Long department_id);
 }

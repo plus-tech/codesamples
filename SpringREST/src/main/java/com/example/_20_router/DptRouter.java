@@ -45,11 +45,11 @@ public class DptRouter {
 	public RouterFunction<ServerResponse> route() {
 
 	    return RouterFunctions
-	      .route(GET(AppConstant.API_ROOT+AppConstant.REST_DPT_FINDALL).and(accept(MediaType.APPLICATION_JSON)), this::findAllDpts)
-	      .andRoute(GET(AppConstant.API_ROOT+AppConstant.REST_DPT_FINDBYID), this::findById)
-	      .andRoute(POST(AppConstant.API_ROOT+AppConstant.REST_DPT_INSERT), this::insertDpt)
-	      .andRoute(PUT(AppConstant.API_ROOT+AppConstant.REST_DPT_UPDATE), this::updateDpt)
-	      .andRoute(DELETE(AppConstant.API_ROOT+AppConstant.REST_DPT_DELETE), this::deleteDpt);
+	      .route(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDALL).and(accept(MediaType.APPLICATION_JSON)), this::findAllDpts)
+	      .andRoute(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDBYID), this::findById)
+	      .andRoute(POST(AppConstant.REST_ROOT+AppConstant.API_DPT_INSERT), this::insertDpt)
+	      .andRoute(PUT(AppConstant.REST_ROOT+AppConstant.API_DPT_UPDATE), this::updateDpt)
+	      .andRoute(DELETE(AppConstant.REST_ROOT+AppConstant.API_DPT_DELETE), this::deleteDpt);
 	  }
 
 	

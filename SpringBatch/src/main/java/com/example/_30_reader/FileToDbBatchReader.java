@@ -23,7 +23,7 @@ public class FileToDbBatchReader {
 //				.resource(new ClassPathResource(filePath))
 				.resource(new FileSystemResource(filePath))
 				.delimited()
-				.names(new String[]{"username", "password", "role"})
+				.names(new String[]{"username", "password", "role", "enabled"})
 				.targetType(User.class)
 				.build();
 	}

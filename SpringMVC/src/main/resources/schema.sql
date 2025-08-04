@@ -36,6 +36,8 @@ INSERT INTO Departments
 WITH tabrows AS (
  SELECT 10, 'Administration', 100 FROM DUAL UNION ALL
  SELECT 20, 'Marketing', 200 FROM DUAL UNION ALL
+ SELECT 30, 'Compliance', 300 FROM DUAL UNION ALL
+ SELECT 40, 'Channel', 400 FROM DUAL UNION ALL
  SELECT 99, 'Dummy', null FROM DUAL
 )
 SELECT * FROM tabrows;

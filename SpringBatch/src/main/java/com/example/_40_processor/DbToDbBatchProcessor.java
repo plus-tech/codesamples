@@ -23,6 +23,7 @@ public class DbToDbBatchProcessor {
 			item.setUsername(item.getUsername());
 			item.setPassword(item.getPassword());
 			item.setRole(item.getRole());
+			item.setEnabled(item.getEnabled());
 			
 			return item;
 		};

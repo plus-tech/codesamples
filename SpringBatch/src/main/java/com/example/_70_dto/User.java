@@ -1,33 +1,26 @@
 package com.example._70_dto;
 
 public class User {
-	private Integer id;
 	private String username;
 	private String password;
 	private String role;
+	private Integer enabled;
 
 
 	public User() {};
 
-	public User(Integer id, String username, String password, String role) {
-		this.id = id;
+	public User(String username, String password, String role, Integer enabled) {
 		this.username = username;
 		this.password = password;
 		this.role = role;
+		this.enabled = enabled;
 	}
 	
 	@Override
 	public String toString() {
 		return String.format(
-				"User[username='%s', password='%s', role='%s']",
-				username, password, role);
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
+				"User[username='%s', password='%s', role='%s', enabled=%d]",
+				username, password, role, enabled);
 	}
 	
 	public String getUsername() {
@@ -49,5 +42,12 @@ public class User {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	public Integer getEnabled() {
+		return enabled;
+	}
+	public void setEnabled(Integer enabled) {
+		this.enabled = enabled;
 	}
 }

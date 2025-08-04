@@ -37,7 +37,10 @@ public class SpringWebClientApplication {
 		System.out.println(">> findById " + webClient.findById((long)30).block());
 		
 	    // We need to block for the content here or the JVM might exit before the data is logged
-	    System.out.println(">> List of Dpts = " + webClient.findAllDpts().blockLast());
+		List<DptDto> dptList = webClient.findAllDpts().collectList().block();
+		dptList.forEach(dpt -> System.out.println(">> findAllDpts = " + dpt.toString()));
+		
+//	    System.out.println(">> List of Dpts = " + webClient.findAllDpts().blockLast());
 	}
 
 }

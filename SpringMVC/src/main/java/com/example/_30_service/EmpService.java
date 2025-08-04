@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example._40_bizlogic.EmpBizLogic;
+import com.example._50_dao.EmpDao;
 import com.example._60_dto.EmpDptDto;
 import com.example._60_dto.EmpDto;
 
@@ -23,10 +24,38 @@ public class EmpService{
 	@Autowired
 	EmpBizLogic empBizLogic;
 	
-	@Transactional
+	/*
+	 * For the purpose of demo, call DAO from the service layer,
+	 * bypassing the business layer
+	 */
+	@Autowired
+	EmpDao empDao;
+	
+	
 	public List<EmpDto> findAll() {
-		return empBizLogic.findAll();
+		return empDao.findAll();
+		
+//		return empBizLogic.findAll();
 	}
+	
+	public EmpDto findById(Integer employee_id) {
+		return empBizLogic.findById(employee_id);
+	};
+	
+	@Transactional
+	public void insertEmp(EmpDto empDto) {
+		empBizLogic.insertEmp(empDto);
+	};
+    
+	@Transactional
+	public void updateEmp(EmpDto empDto) {
+		empBizLogic.updateEmp(empDto);
+    }
+    
+	@Transactional
+    public void deleteEmp(Integer employee_id) {
+    	empBizLogic.deleteEmp(employee_id);
+    }
 	
 	public List<Map<String, Object>> leftJoin() {
 		return empBizLogic.leftJoin();

@@ -28,7 +28,7 @@ public class DbToDbBatchReader {
 	@Bean
 	@StepScope
 	public JdbcCursorItemReader<User> dtdImportUserStepReader() {
-		String sql = "SELECT u.id, u.username, u.password, a.authority "
+		String sql = "SELECT u.username, u.password, a.authority, u.enabled "
 				+ "FROM users u, authorities a "
 				+ "WHERE u.username=a.username";
 		
@@ -40,10 +40,10 @@ public class DbToDbBatchReader {
 					@Override
 					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 						return new User(
-								rs.getInt("id"),
 								rs.getString("username"),
 								rs.getString("password"),
-								rs.getString("authority"));
+								rs.getString("authority"),
+								rs.getInt("enabled"));
 					}
 					
 				})

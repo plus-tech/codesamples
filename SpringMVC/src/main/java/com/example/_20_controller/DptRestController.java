@@ -43,7 +43,7 @@ public class DptRestController {
 	MessageSource msgSource;
 	
 	
-	@GetMapping(AppConstant.PATH_DPT_FINDALL)
+	@GetMapping(AppConstant.API_DPT_FINDALL)
 	@ResponseBody
 	@Operation(method="GET", description="Get the list of all the departments")
 	@ApiResponses(value= {
@@ -59,7 +59,7 @@ public class DptRestController {
 	    return dptList;
 	}
 	
-	@GetMapping(AppConstant.PATH_DPT_FINDBYID)
+	@GetMapping(AppConstant.API_DPT_FINDBYID)
 	@ResponseBody
 	@Operation(method="GET", description="Get the department with the specified department id")
 	@ApiResponses(value= {
@@ -76,7 +76,7 @@ public class DptRestController {
 		return (ObjectUtils.isEmpty(dptList)? null: dptList.getFirst());
 	}
 	
-	@PostMapping(AppConstant.PATH_DPT_INSERT)
+	@PostMapping(AppConstant.API_DPT_INSERT)
 	@ResponseStatus(HttpStatus.CREATED)
 	public void insertDpt(
 			@RequestBody DptDto dptDto){
@@ -86,7 +86,7 @@ public class DptRestController {
 		dptService.insertDpt(dptDto);
 	}
 	
-	@PutMapping(AppConstant.PATH_DPT_UPDATE)
+	@PutMapping(AppConstant.API_DPT_UPDATE)
 	public void updateDpt(
 			@RequestBody DptDto dptDto){
 		
@@ -95,7 +95,7 @@ public class DptRestController {
 		dptService.updateDpt(dptDto);
 	}
 	
-	@DeleteMapping(AppConstant.PATH_DPT_DELETE)
+	@DeleteMapping(AppConstant.API_DPT_DELETE)
 	public void deleteDpt(@PathVariable Long department_id){
 		
 		log.info(String.format("deleting department %d",department_id));

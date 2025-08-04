@@ -29,7 +29,9 @@ public class DptDaoImpl implements DptDao {
 
 	@Override
 	public List<DptDto> findAll(){	
-		String sql = "SELECT department_id, department_name, manager_id FROM departments";
+		String sql = "SELECT department_id, department_name, manager_id "
+				+ "FROM departments "
+				+ "ORDER BY department_id";
 	    	
 		List<DptDto> dptlist = null;
 		try {
@@ -49,9 +51,9 @@ public class DptDaoImpl implements DptDao {
 	 * RowMapper - another way to get data from a record set
 	 */
 	public List<DptDto> findAllDpts() {
-
-        String sql = "SELECT department_id, department_name, manager_id "
-        		+ "FROM departments ";
+		String sql = "SELECT department_id, department_name, manager_id "
+				+ "FROM departments "
+				+ "ORDER BY department_id";
     	
         List<DptDto> dptlist = null;
         try {
@@ -73,28 +75,28 @@ public class DptDaoImpl implements DptDao {
 	}
 	
 	public List<DptDto> findById(Long department_id){
-
-        String sql = "SELECT department_id, department_name, manager_id "
-        		+ "FROM departments "
-        		+ "WHERE department_id = ?";
+		
+		String sql = "SELECT department_id, department_name, manager_id "
+				+ "FROM departments "
+				+ "WHERE department_id = ?";
     	
-        List<DptDto> dptlist = null;
-        try {
-	        	dptlist = jdbcTemplate.query(sql, new Object[] {department_id}, new int[] {Types.INTEGER}, new RowMapper<DptDto>() {
-	            @Override
-	            public DptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-	            		DptDto dptdto = new DptDto();
-	            		dptdto.setDepartment_id(rs.getLong("department_id"));
-	            		dptdto.setDepartment_name(rs.getString("department_name"));
-	            		dptdto.setManager_id(rs.getInt("manager_id"));
-	                return dptdto;
-	            }
-	        });        	
-        } catch (Exception e) {
-        		System.out.println(e);
-        }
+		List<DptDto> dptlist = null;
+		try {
+			dptlist = jdbcTemplate.query(sql, new Object[] {department_id}, new int[] {Types.INTEGER}, new RowMapper<DptDto>() {
+				@Override
+				public DptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+					DptDto dptdto = new DptDto();
+					dptdto.setDepartment_id(rs.getLong("department_id"));
+					dptdto.setDepartment_name(rs.getString("department_name"));
+					dptdto.setManager_id(rs.getInt("manager_id"));
+					return dptdto;
+				}
+			});        	
+		} catch (Exception e) {
+			System.out.println(e);
+		}
         
-        return dptlist;
+		return dptlist;
 	}
 	
 	@Override
