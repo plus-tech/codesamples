@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example._40_bizlogic.EmpBizLogic;
 import com.example._50_dao.EmpDao;
+import com.example._50_dao.sndmapper.SndEmployeeMapper;
 import com.example._60_dto.EmpDptDto;
 import com.example._60_dto.EmpDto;
 
@@ -31,9 +32,14 @@ public class EmpService{
 	@Autowired
 	EmpDao empDao;
 	
+	@Autowired
+	SndEmployeeMapper empMapper;
+	
 	
 	public List<EmpDto> findAll() {
-		return empDao.findAll();
+//		return empDao.findAll();
+		
+		return empMapper.findAll();
 		
 //		return empBizLogic.findAll();
 	}

@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 @SpringBootApplication(/*exclude = { DataSourceAutoConfiguration.class }*/)
 @MapperScan("com.example._50_dao.mapper")
 public class SpringMvcApplication {
-	private static final Logger log = LoggerFactory.getLogger(SpringMvcApplication.class);
+	static final Logger log = LoggerFactory.getLogger(SpringMvcApplication.class);
 	
 	public static void main(String[] args) {
 		SpringApplication.run(SpringMvcApplication.class, args);

@@ -40,7 +40,9 @@ public class DptDaoImpl implements DptDao {
 		List<DptDto> dptlist = null;
 		try {
 			dptlist = jdbcTemplate.query(sql,
-					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), rs.getString("department_name"), rs.getInt("manager_id"))
+					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), 
+							rs.getString("department_name"), 
+							rs.getInt("manager_id"))
 			);
 		} catch (Exception e) {
 			System.out.println(e);

@@ -22,7 +22,8 @@ public class EmpDaoImpl implements EmpDao {
 
 	
 	public List<EmpDto> findAll(){
-        String sql = "SELECT employee_id, first_name, last_name, salary, hire_date, manager_id, department_id "
+        String sql = "SELECT employee_id, first_name, last_name, salary, "
+        		+ "hire_date, manager_id, department_id "
         		+ "FROM employees "
         		+ "ORDER BY employee_id";
         

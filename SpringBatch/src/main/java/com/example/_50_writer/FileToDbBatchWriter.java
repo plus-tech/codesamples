@@ -28,14 +28,17 @@ public class FileToDbBatchWriter {
 	public JdbcBatchItemWriter<User> ftdImportFileStepWriter() {
 		
 		String sql = "INSERT ALL "
-				+ "INTO users(id, username, password, enabled) VALUES (users_seq.nextval, :username, :password, :enabled) "
-				+ "INTO authorities(username, authority) VALUES (:username, :role) "
+				+ "INTO users(id, username, password, enabled) "
+				+ "VALUES (users_seq.nextval, :username, :password, :enabled) "
+				+ "INTO authorities(username, authority) "
+				+ "VALUES (:username, :role) "
 				+ "SELECT * FROM DUAL";
 		
 		return new JdbcBatchItemWriterBuilder<User>()
 				.sql(sql)
 				.dataSource(dataSource)
-				.itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
+				.itemSqlParameterSourceProvider(
+						new BeanPropertyItemSqlParameterSourceProvider<>())
 				.build();
 	}
 }

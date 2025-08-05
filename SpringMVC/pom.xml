@@ -81,11 +81,12 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<!-- Spring MVC -->
+		<!-- Spring MVC 
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 		</dependency>
+		-->
         
         <!-- Thymeleaf -->
 		<dependency>

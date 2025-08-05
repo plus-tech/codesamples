@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example._40_bizlogic.DptBizLogic;
+import com.example._50_dao.mapper.DepartmentMapper;
 import com.example._60_dto.DptDto;
 
 /*
@@ -21,9 +22,17 @@ public class DptService{
 	@Autowired
 	DptBizLogic dptBizLogic;
 	
+	/*
+	 * For the purpose of demo, call DAO from the service layer,
+	 * bypassing the business layer
+	 */
+	@Autowired
+	DepartmentMapper dptMapper;	
+	
 	@Transactional
 	public List<DptDto> findAll() {
-		return dptBizLogic.findAll();
+		return dptMapper.findAll();
+//		return dptBizLogic.findAll();
 	}
 	
 	@Transactional
