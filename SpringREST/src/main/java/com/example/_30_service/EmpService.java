@@ -30,7 +30,7 @@ public class EmpService{
 		return empMapper.findAll();
 	}
 	
-	public EmpDto findById(Integer employee_id) {
+	public List<EmpDto> findById(Integer employee_id) {
 		return empMapper.findById(employee_id);
 	};
 	

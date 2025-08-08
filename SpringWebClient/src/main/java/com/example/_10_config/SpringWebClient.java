@@ -3,9 +3,12 @@ package com.example._10_config;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -18,7 +21,7 @@ import com.example._90_util.AppConstant;
 @Component
 public class SpringWebClient {
 	@Autowired
-	Logger Log;
+	Logger log;
 
 	private final WebClient webClient;
 
@@ -31,7 +34,7 @@ public class SpringWebClient {
 	}
 
 	public Flux<DptDto> findAllDpts() {
-		Log.info("--- findAllDpts");
+		log.info(">> findAllDpts");
 		
 		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_FINDALL;
 		
@@ -41,18 +44,19 @@ public class SpringWebClient {
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.onStatus(status -> status.equals(HttpStatus.NOT_FOUND), 
-		                  clientResponse -> Mono.error(new Exception("Departments not found")))
+						clientResponse -> Mono.error(
+								new Exception("Departments not found")))
 				.bodyToFlux(DptDto.class)
-				.onErrorResume(Exception.class, e -> {
-		            return Flux.empty(); 
-		        });
+				.onErrorResume(Exception.class, 
+						e -> {return Flux.empty();});
 	}
 	
 
 	public Mono<DptDto> findById(Long department_id) {
-		Log.info("--- findById : " + Long.toString(department_id));
+		log.info(">> findById : " + Long.toString(department_id));
 		
-		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_FINDBYID + Long.toString(department_id);
+		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_FINDBYID 
+				+ Long.toString(department_id);
 		
 		return this.webClient
 				.get()
@@ -60,29 +64,51 @@ public class SpringWebClient {
 				.accept(MediaType.APPLICATION_JSON)
 				.retrieve()
 				.onStatus(status -> status.equals(HttpStatus.NOT_FOUND), 
-		                  clientResponse -> Mono.error(new Exception("Department not found")))
+						clientResponse -> Mono.error(
+								new RuntimeException("Department not found")))
 				.bodyToMono(DptDto.class)
-				.onErrorResume(Exception.class, e -> {
-		            return Mono.empty(); 
-		        });
+				.onErrorResume(RuntimeException.class, 
+						e -> {return Mono.empty();});
 	}
 
-	public Mono<String> insertDpt(DptDto dptDto) {
-		Log.info("--- insertDpt : " + dptDto.toString());
+	public Mono<URI> insertDpt(DptDto dptDto) {
+		log.info(">> insertDpt : " + dptDto.toString());
 		
 		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_INSERT;
+		
+		return webClient.post()
+		.uri(uri)
+		.bodyValue(dptDto)
+		.accept(MediaType.APPLICATION_JSON)
+		.exchangeToMono(response -> {
 			
-		return this.webClient
-				.post()
-				.uri(uri)
-				.accept(MediaType.APPLICATION_JSON)
-				.bodyValue(dptDto)
-				.retrieve()
-				.bodyToMono(String.class);
+			if (response.statusCode().equals(HttpStatus.CREATED)) {
+				HttpHeaders headers = response.headers().asHttpHeaders();
+				URI locHeader = headers.getLocation();
+				
+				if (locHeader != null) {
+					return Mono.just(locHeader);
+				} else {
+					return Mono.error(new IllegalStateException(
+							"URI of the newly created department is not found."));
+				}
+			} else {
+				return Mono.error(new RuntimeException(
+						"An error occurred while creating a new department."));
+			}
+		});
+
+//		.retrieve()
+//		.toEntity(String.class)
+//		.subscribe(response -> {
+//			HttpHeaders header = response.getHeaders();
+//			URI locHeader = header.getLocation();
+//			System.out.println(">> returned URI: " + locHeader);
+//		}
 	}
 	
 	public Mono<String> updateDpt(DptDto dptDto) {
-		Log.info("--- updateDpt : " + dptDto.toString());
+		log.info(">> updateDpt : " + dptDto.toString());
 		
 		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_UPDATE;
 			
@@ -96,7 +122,7 @@ public class SpringWebClient {
 	}
 	
 	public Mono<String> deleteDpt(Long department_id){
-		Log.info("--- deleteDpt : " + Long.toString(department_id));
+		log.info(">> deleteDpt : " + Long.toString(department_id));
 		
 		String uri = AppConstant.REST_ROOT + AppConstant.API_DPT_DELETE + Long.toString(department_id);
 		

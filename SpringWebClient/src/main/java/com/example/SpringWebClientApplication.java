@@ -20,7 +20,8 @@ public class SpringWebClientApplication {
 	public static void main(String[] args) {
 //		SpringApplication.run(SpringWebClientApplication.class, args);
 
-		ConfigurableApplicationContext context = SpringApplication.run(SpringWebClientApplication.class, args);
+		ConfigurableApplicationContext context = 
+				SpringApplication.run(SpringWebClientApplication.class, args);
 		
 		SpringWebClient webClient = context.getBean(SpringWebClient.class);
 				
@@ -38,7 +39,8 @@ public class SpringWebClientApplication {
 		
 	    // We need to block for the content here or the JVM might exit before the data is logged
 		List<DptDto> dptList = webClient.findAllDpts().collectList().block();
-		dptList.forEach(dpt -> System.out.println(">> findAllDpts = " + dpt.toString()));
+		dptList.forEach(dpt -> System.out.println(
+				">> findAllDpts = " + dpt.toString()));
 		
 //	    System.out.println(">> List of Dpts = " + webClient.findAllDpts().blockLast());
 	}

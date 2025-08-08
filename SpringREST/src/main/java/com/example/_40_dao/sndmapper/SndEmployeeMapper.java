@@ -14,7 +14,7 @@ import com.example._50_dto.*;
 @Mapper
 public interface SndEmployeeMapper {
 	List<EmpDto> findAll();
-	EmpDto findById(Integer employee_id);
+	List<EmpDto> findById(Integer employee_id);
     void insertEmp(EmpDto empDto);
     void updateEmp(EmpDto empDto);
     void deleteEmp(Integer employee_id);

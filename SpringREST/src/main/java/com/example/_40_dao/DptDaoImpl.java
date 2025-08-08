@@ -36,7 +36,9 @@ public class DptDaoImpl implements DptDao {
 		List<DptDto> dptlist = null;
 		try {
 			dptlist = jdbcTemplate.query(sql,
-					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), rs.getString("department_name"), rs.getInt("manager_id"))
+					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), 
+							rs.getString("department_name"), 
+							rs.getInt("manager_id"))
 			);
 		} catch (Exception e) {
 			System.out.println(e);
@@ -82,13 +84,18 @@ public class DptDaoImpl implements DptDao {
     	
 		List<DptDto> dptlist = null;
 		try {
-			dptlist = jdbcTemplate.query(sql, new Object[] {department_id}, new int[] {Types.INTEGER}, new RowMapper<DptDto>() {
+			dptlist = jdbcTemplate.query(sql, new Object[] {department_id}, 
+					new int[] {Types.INTEGER}, new RowMapper<DptDto>() {
 				@Override
-				public DptDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+				public DptDto mapRow(ResultSet rs, int rowNum) 
+						throws SQLException {
 					DptDto dptdto = new DptDto();
-					dptdto.setDepartment_id(rs.getLong("department_id"));
-					dptdto.setDepartment_name(rs.getString("department_name"));
-					dptdto.setManager_id(rs.getInt("manager_id"));
+					dptdto.setDepartment_id(
+							rs.getLong("department_id"));
+					dptdto.setDepartment_name(
+							rs.getString("department_name"));
+					dptdto.setManager_id(
+							rs.getInt("manager_id"));
 					return dptdto;
 				}
 			});        	

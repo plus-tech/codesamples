@@ -1,5 +1,6 @@
 package com.example._20_router;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -41,20 +42,26 @@ import reactor.core.publisher.Mono;
 ) // Class-level
 public class DptRouter {
 	
-	@Bean
+	@Bean(name = "dptroute")
 	public RouterFunction<ServerResponse> route() {
 
 	    return RouterFunctions
-	      .route(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDALL).and(accept(MediaType.APPLICATION_JSON)), this::findAllDpts)
-	      .andRoute(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDBYID), this::findById)
-	      .andRoute(POST(AppConstant.REST_ROOT+AppConstant.API_DPT_INSERT), this::insertDpt)
-	      .andRoute(PUT(AppConstant.REST_ROOT+AppConstant.API_DPT_UPDATE), this::updateDpt)
-	      .andRoute(DELETE(AppConstant.REST_ROOT+AppConstant.API_DPT_DELETE), this::deleteDpt);
+	      .route(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDALL)
+	    		  .and(accept(MediaType.APPLICATION_JSON)), 
+	    		  this::findAllDpts)
+	      .andRoute(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDBYID), 
+	    		  this::findById)
+	      .andRoute(POST(AppConstant.REST_ROOT+AppConstant.API_DPT_INSERT), 
+	    		  this::insertDpt)
+	      .andRoute(PUT(AppConstant.REST_ROOT+AppConstant.API_DPT_UPDATE), 
+	    		  this::updateDpt)
+	      .andRoute(DELETE(AppConstant.REST_ROOT+AppConstant.API_DPT_DELETE), 
+	    		  this::deleteDpt);
 	  }
 
 	
 	@Autowired
-	Logger Log;
+	Logger log;
 	
 	@Autowired
 	private DptService dptService;
@@ -63,7 +70,7 @@ public class DptRouter {
 		
 		List<DptDto> listDpt = dptService.findAll();
 		
-		listDpt.forEach(dpt -> Log.info(String.format("--- %s", dpt.toString())));
+		listDpt.forEach(dpt -> log.info(String.format(">> %s", dpt.toString())));
 		
 		if (!ObjectUtils.isEmpty(listDpt)) {
 			return ServerResponse.ok()
@@ -80,7 +87,7 @@ public class DptRouter {
 		Map<String, String> pathVariables = request.pathVariables();
 		Long department_id = Long.parseLong(pathVariables.get("department_id")); 
 		
-		Log.info("--- findById: %d".formatted(department_id));
+		log.info(">> findById: %d".formatted(department_id));
 		List<DptDto> listDpt = dptService.findById(department_id);
 		
 		if (!ObjectUtils.isEmpty(listDpt)) {
@@ -102,13 +109,19 @@ public class DptRouter {
 				.bodyToMono(DptDto.class)
 				.flatMap(dptDto -> {
 									
-					Log.info("--- insertDpt: %s".formatted(dptDto.toString()));
+					log.info(">> insertDpt: %s".formatted(dptDto.toString()));
 					
 					dptService.insertDpt(dptDto);
 					
-					return ServerResponse.ok()
-							.contentType(MediaType.APPLICATION_JSON)
-							.bodyValue("Department has been added.");
+			        URI dptURI = URI.create(AppConstant.REST_ROOT
+			        		+ String.format(AppConstant.URI_DPT_CREATED, 
+			        				dptDto.getDepartment_id()));
+			        
+			        log.info(">> URI: " + dptURI.toString());
+			        
+			        return ServerResponse.created(dptURI)
+			        		.contentType(MediaType.APPLICATION_JSON)
+			        		.bodyValue("Department has been added.");
 				});
 
 		/*
@@ -133,7 +146,7 @@ public class DptRouter {
 				.bodyToMono(DptDto.class)
 				.flatMap(dptDto ->{
 					
-					Log.info("--- updateDpt: %s".formatted(dptDto.toString()));
+					log.info(">> updateDpt: %s".formatted(dptDto.toString()));
 					
 					dptService.updateDpt(dptDto);
 
@@ -149,7 +162,7 @@ public class DptRouter {
 		Map<String, String> pathVariables = request.pathVariables();
 		Long department_id = Long.parseLong(pathVariables.get("department_id")); 
 		
-		Log.info("--- deleteDpt: %d".formatted(department_id));
+		log.info(">> deleteDpt: %d".formatted(department_id));
 		dptService.deleteDpt(department_id);
 		
 		return ServerResponse.ok()
