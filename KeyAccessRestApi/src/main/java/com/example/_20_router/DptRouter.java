@@ -1,46 +1,39 @@
+/**
+ * 
+ */
 package com.example._20_router;
+
+import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
+import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
+import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
+import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
+import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
 
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.MediaType;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import static org.springframework.web.reactive.function.server.RequestPredicates.GET;
-import static org.springframework.web.reactive.function.server.RequestPredicates.POST;
-import static org.springframework.web.reactive.function.server.RequestPredicates.PUT;
-import static org.springframework.web.reactive.function.server.RequestPredicates.DELETE;
-import static org.springframework.web.reactive.function.server.RequestPredicates.accept;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.util.ObjectUtils;
 
 import com.example._30_service.DptService;
 import com.example._50_dto.DptDto;
 import com.example._90_util.AppConstant;
 
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-
+/**
+ * 
+ */
 @Configuration(proxyBeanMethods = false)
-@CrossOrigin(
-	origins = {"http://localhost:3000", "http://localhost:8080"}, 
-	methods = {
-			RequestMethod.GET, RequestMethod.POST, 
-			RequestMethod.PUT, RequestMethod.DELETE},
-	maxAge = 3600
-) // Class-level
 public class DptRouter {
 	
 	@Bean(name = "dptroute")
@@ -61,21 +54,22 @@ public class DptRouter {
 	  }
 
 	
-	@Autowired
-	Logger log;
+//	@Autowired
+//	Logger log;
 	
 	@Autowired
-	private DptService dptService;
+	DptService dptService;
 	
 	public Mono<ServerResponse> findAllDpts(ServerRequest request) {
 		System.out.println(">> entering " + new Object() {}
-		.getClass()
-		.getEnclosingMethod()
-		.getName());
+			.getClass()
+			.getEnclosingMethod()
+			.getName() );
 		
-		List<DptDto> listDpt = dptService.findAll();
+		List<DptDto> listDpt = dptService.findAllDpts();
 		
-		listDpt.forEach(dpt -> log.info(String.format(">> %s", dpt.toString())));
+		listDpt.forEach(dpt -> System.out.println(String.format(">> %s", dpt.toString())));
+//		List<String> listDpt = List.of("Test", "Demo");
 		
 		if (!ObjectUtils.isEmpty(listDpt)) {
 			return ServerResponse.ok()
@@ -86,14 +80,13 @@ public class DptRouter {
 					.build();
 		}
 	}
-
 	public Mono<ServerResponse> findById(ServerRequest request){
 		
 		Map<String, String> pathVariables = request.pathVariables();
-		Long department_id = Long.parseLong(pathVariables.get("department_id")); 
+		Long dpt_id = Long.parseLong(pathVariables.get("dpt_id")); 
 		
-		log.info(">> findById: %d".formatted(department_id));
-		List<DptDto> listDpt = dptService.findById(department_id);
+		System.out.println(">> findById: %d".formatted(dpt_id));
+		List<DptDto> listDpt = dptService.findById(dpt_id);
 		
 		if (!ObjectUtils.isEmpty(listDpt)) {
 
@@ -114,7 +107,7 @@ public class DptRouter {
 				.bodyToMono(DptDto.class)
 				.flatMap(dptDto -> {
 									
-					log.info(">> insertDpt: %s".formatted(dptDto.toString()));
+					System.out.println(">> insertDpt: %s".formatted(dptDto.toString()));
 					
 					dptService.insertDpt(dptDto);
 					
@@ -122,26 +115,13 @@ public class DptRouter {
 			        		+ String.format(AppConstant.URI_DPT_CREATED, 
 			        				dptDto.getDepartment_id()));
 			        
-			        log.info(">> URI: " + dptURI.toString());
+			        System.out.println(">> URI: " + dptURI.toString());
 			        
 			        return ServerResponse.created(dptURI)
 			        		.contentType(MediaType.APPLICATION_JSON)
 			        		.bodyValue("Department has been added.");
 				});
 
-		/*
-		DptDto monodptDto = request.formData()
-				.flatMap(formData -> {
-					
-					Long dptId = Long.parseLong(formData.getFirst("department_id"));
-					String dptName = formData.getFirst("department_name");					
-					Integer mgrId = Integer.parseInt(formData.getFirst("manager_id"));
-					
-					DptDto tmpdptDto = new DptDto(dptId, dptName, mgrId);
-					
-					return Mono.just(tmpdptDto);
-				});
-		*/
 	}
 	
 	
@@ -151,7 +131,7 @@ public class DptRouter {
 				.bodyToMono(DptDto.class)
 				.flatMap(dptDto ->{
 					
-					log.info(">> updateDpt: %s".formatted(dptDto.toString()));
+					System.out.println(">> updateDpt: %s".formatted(dptDto.toString()));
 					
 					dptService.updateDpt(dptDto);
 
@@ -165,14 +145,15 @@ public class DptRouter {
 	public Mono<ServerResponse> deleteDpt(ServerRequest request){
 		
 		Map<String, String> pathVariables = request.pathVariables();
-		Long department_id = Long.parseLong(pathVariables.get("department_id")); 
+		Long dpt_id = Long.parseLong(pathVariables.get("dpt_id")); 
 		
-		log.info(">> deleteDpt: %d".formatted(department_id));
-		dptService.deleteDpt(department_id);
+		System.out.println(">> deleteDpt: %d".formatted(dpt_id));
+		dptService.deleteDpt(dpt_id);
 		
 		return ServerResponse.ok()
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(BodyInserters.fromValue(new String("Department has been deleted.")));
 
 	}
+
 }

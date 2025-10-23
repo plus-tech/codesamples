@@ -28,6 +28,12 @@ CREATE TABLE App_Parameters (
   ,CONSTRAINT app_parameters_pk PRIMARY KEY (App_Name, Parameter_Name)
 );
 
+CREATE TABLE App_ApiKey (
+   Key VARCHAR2(64) UNIQUE
+  ,Username VARCHAR2(30) NOT NULL
+  ,Description VARCHAR2(128)
+)
+ NOLOGGING;
 
 --
 -- DML
@@ -74,3 +80,9 @@ SELECT * from (
 		'empCurrentDb' AS empCurrentDb
 	)
 );
+
+INSERT ALL
+ INTO App_ApiKey (Key, Username, Description) VALUES('XvcItqrOmhPb2gxalIiGWhe7kOQ5cT6E5ZpUpYLM8RU=', 'DEMO', 'Key for user DEMO')
+ INTO App_ApiKey (Key, Username, Description) VALUES('nXW29eDKVKZnwT2Hu5LXVHp+m0Xd32py9OdRp0qSZIw=', 'TEST', 'Key for user TEST')
+SELECT * FROM DUAL;
+ 

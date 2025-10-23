@@ -7,6 +7,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -45,9 +46,11 @@ public class SecondaryDataSourceConfig {
 	@Bean(defaultCandidate = false)
     @ConfigurationProperties("secondary.datasource")
     public DataSource sndDataSource() {
-		DriverManagerDataSource dataSource = new DriverManagerDataSource();
+//		return DataSourceBuilder.create().type(HikariDataSource.class).build();
+//		return DataSourceBuilder.create().type(DriverManagerDataSource.class).build();
 		
-        return dataSource;
+		DriverManagerDataSource dataSource = new DriverManagerDataSource();		
+		return dataSource;
     }
 	
 	@Profile("dev")
