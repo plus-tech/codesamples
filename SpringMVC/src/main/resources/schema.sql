@@ -82,7 +82,9 @@ SELECT * from (
 );
 
 INSERT ALL
- INTO App_ApiKey (Key, Username, Description) VALUES('XvcItqrOmhPb2gxalIiGWhe7kOQ5cT6E5ZpUpYLM8RU=', 'DEMO', 'Key for user DEMO')
- INTO App_ApiKey (Key, Username, Description) VALUES('nXW29eDKVKZnwT2Hu5LXVHp+m0Xd32py9OdRp0qSZIw=', 'TEST', 'Key for user TEST')
+ INTO App_ApiKey 
+  VALUES('XvcItqrOmhPb2gxalIiGWhe7kOQ5cT6E5ZpUpYLM8RU=', 'DEMO', 'Key for user DEMO')
+ INTO App_ApiKey 
+  VALUES('nXW29eDKVKZnwT2Hu5LXVHp+m0Xd32py9OdRp0qSZIw=', 'TEST', 'Key for user TEST')
 SELECT * FROM DUAL;
  

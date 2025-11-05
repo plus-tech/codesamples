@@ -40,22 +40,19 @@ public class DptRouter {
 	public RouterFunction<ServerResponse> route() {
 
 	    return RouterFunctions
-	      .route(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDALL)
+	      .route(GET(AppConstant.REST_ROOT + AppConstant.API_DPT_FINDALL)
 	    		  .and(accept(MediaType.APPLICATION_JSON)), 
 	    		  this::findAllDpts)
-	      .andRoute(GET(AppConstant.REST_ROOT+AppConstant.API_DPT_FINDBYID), 
+	      .andRoute(GET(AppConstant.REST_ROOT + AppConstant.API_DPT_FINDBYID), 
 	    		  this::findById)
-	      .andRoute(POST(AppConstant.REST_ROOT+AppConstant.API_DPT_INSERT), 
+	      .andRoute(POST(AppConstant.REST_ROOT + AppConstant.API_DPT_INSERT), 
 	    		  this::insertDpt)
-	      .andRoute(PUT(AppConstant.REST_ROOT+AppConstant.API_DPT_UPDATE), 
+	      .andRoute(PUT(AppConstant.REST_ROOT + AppConstant.API_DPT_UPDATE), 
 	    		  this::updateDpt)
-	      .andRoute(DELETE(AppConstant.REST_ROOT+AppConstant.API_DPT_DELETE), 
+	      .andRoute(DELETE(AppConstant.REST_ROOT + AppConstant.API_DPT_DELETE), 
 	    		  this::deleteDpt);
 	  }
 
-	
-//	@Autowired
-//	Logger log;
 	
 	@Autowired
 	DptService dptService;
@@ -69,9 +66,8 @@ public class DptRouter {
 		List<DptDto> listDpt = dptService.findAllDpts();
 		
 		listDpt.forEach(dpt -> System.out.println(String.format(">> %s", dpt.toString())));
-//		List<String> listDpt = List.of("Test", "Demo");
 		
-		if (!ObjectUtils.isEmpty(listDpt)) {
+		if (listDpt != null && !ObjectUtils.isEmpty(listDpt)) {
 			return ServerResponse.ok()
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(BodyInserters.fromValue(listDpt));
@@ -80,6 +76,7 @@ public class DptRouter {
 					.build();
 		}
 	}
+	
 	public Mono<ServerResponse> findById(ServerRequest request){
 		
 		Map<String, String> pathVariables = request.pathVariables();
@@ -88,8 +85,7 @@ public class DptRouter {
 		System.out.println(">> findById: %d".formatted(dpt_id));
 		List<DptDto> listDpt = dptService.findById(dpt_id);
 		
-		if (!ObjectUtils.isEmpty(listDpt)) {
-
+		if (listDpt != null && !ObjectUtils.isEmpty(listDpt)) {
 			return ServerResponse.ok()
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(Mono.just(listDpt.getFirst()), DptDto.class);
@@ -121,7 +117,6 @@ public class DptRouter {
 			        		.contentType(MediaType.APPLICATION_JSON)
 			        		.bodyValue("Department has been added.");
 				});
-
 	}
 	
 	
@@ -153,7 +148,5 @@ public class DptRouter {
 		return ServerResponse.ok()
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(BodyInserters.fromValue(new String("Department has been deleted.")));
-
 	}
-
 }

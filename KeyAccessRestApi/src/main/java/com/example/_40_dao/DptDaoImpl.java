@@ -37,7 +37,8 @@ public class DptDaoImpl implements DptDao {
 		List<DptDto> dptlist = null;
 		try {
 			dptlist = jdbcTemplate.query(sql,
-					(rs, rowNum) -> new DptDto(rs.getLong("department_id"), 
+					(rs, rowNum) -> new DptDto(
+							rs.getLong("department_id"), 
 							rs.getString("department_name"), 
 							rs.getInt("manager_id"))
 			);
@@ -63,12 +64,9 @@ public class DptDaoImpl implements DptDao {
 				public DptDto mapRow(ResultSet rs, int rowNum) 
 						throws SQLException {
 					DptDto dptdto = new DptDto();
-					dptdto.setDepartment_id(
-							rs.getLong("department_id"));
-					dptdto.setDepartment_name(
-							rs.getString("department_name"));
-					dptdto.setManager_id(
-							rs.getInt("manager_id"));
+					dptdto.setDepartment_id(	rs.getLong("department_id"));
+					dptdto.setDepartment_name(rs.getString("department_name"));
+					dptdto.setManager_id(rs.getInt("manager_id"));
 					return dptdto;
 				}
 			});        	

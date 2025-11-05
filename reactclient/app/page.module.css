@@ -194,20 +194,27 @@ a.secondary {
 }
 .dpt td.contents {
   border: 1px solid #ddd;
-  padding: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 
+/* .dpt button, .dpt input[type=text].forAdd, .dpt input[type=number].forAdd { */
 .dpt button, .dpt input[type=text], .dpt input[type=number] {
   display: block; /* Makes the button a block-level element */
   width: 100%;    /* Makes the button take up the full width of the cell */
   height: 2em;
   box-sizing: border-box; /* Includes padding and border in the element's total width and height */
 }
+.dpt input[readonly]{
+  border: none;
+  cursor: default;
+  background-color: transparent;
+  outline: none;
+}
+
 .dpt input[type=checkbox] {
   display: block;
-  width: 100%;    /* Makes the button take up the full width of the cell */
+  width: 100%;
   height: 1.2em;
 
 }

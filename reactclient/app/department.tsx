@@ -7,14 +7,15 @@ import {
   RestEndpoint,
   PathFindAllDpts,
   ApiAccessKey,
-} from "./util/constant.tsx";
+} from "./util/constant.ts";
 
 import {
   ApiFindAllDpts,
   ApiFindDptById,
   ApiInsertDpt,
+  ApiUpdateDpt,
   ApiDeleteDpt,
-} from "./service/apidpt.tsx";
+} from "./service/apidpt.ts";
 
 import styles from "./page.module.css";
 
@@ -23,7 +24,7 @@ export default function Department(){
   const [dptId, setDptId] = React.useState(null);
   const [dptList, setDptList] = React.useState(null);
   const [isVisible, setIsVisible] = React.useState(false);
-  const refAddBtn = React.useRef(null);
+  const refCreateBtn = React.useRef(null);
 
   const refDptForm = React.useRef(null);
   const [newDpt, setNewDpt] = React.useState({
@@ -33,18 +34,19 @@ export default function Department(){
   });
 
   /*
-   * Add the additional fields to the departments related to checkbox
+   * Add the additional fields to each department object
    */
-  const initialDptList = (dptlist) => {
+  const transformDptList = (dptlist) => {
     // let tmplist = [];
     // dptlist.map((dpt, index) => {
-    //     tmplist.push({...dpt, id:dpt.department_id, checked:false})
+    //     tmplist.push({...dpt, id:dpt.department_id, checked:false, updated:false})
     //   }
     // )
     // console.log('adjusted dptlist: ', tmplist);
     //
     // setDptList(tmplist);
-    setDptList(dptlist.map((dpt) => dpt={...dpt, id:dpt.department_id, checked:false}));
+    setDptList(dptlist.map((dpt) =>
+      dpt={...dpt, id:dpt.department_id, checked:false, updated:false}));
   };
 
   /*
@@ -59,7 +61,7 @@ export default function Department(){
         if (!ignore) {
           console.log("response: ", response);
 
-          initialDptList(response.data);
+          transformDptList(response.data);
         }
       })
       .catch(error =>{
@@ -82,7 +84,7 @@ export default function Department(){
     if (dptId == null || dptId == ''){
       ApiFindAllDpts()
         .then(res => {
-          initialDptList(res.data);
+          transformDptList(res.data);
         })
         .catch(error =>{
           console.error(error);
@@ -90,27 +92,29 @@ export default function Department(){
     } else {
       ApiFindDptById(dptId)
         .then(res => {
-          initialDptList([res.data]);
+          transformDptList([res.data]);
         })
         .catch(error =>{
           console.error(error);
         });
     }
+
+    hideCreateInputs();
   }
 
   /*
-   * insert a new department
+   * Create a new department
    */
   const onChange = (e) => {
     setNewDpt({...newDpt, [e.target.name]: e.target.value });
   }
 
-  function addDpt(e){
+  function CreateDpt(e){
     e.preventDefault();
 
     const btnCaption = e.target.innerText;
     if (btnCaption==="Submit"){
-      console.log('Adding dpt: ', newDpt);
+      console.log('Creating a dpt: ', newDpt);
 
       ApiInsertDpt(newDpt)
         .then(response => {
@@ -119,7 +123,7 @@ export default function Department(){
 
           const tmpdpt = dptList.concat({...newDpt, id:newDpt.department_id, checked:false});
           const sorteddpt = [...tmpdpt].sort((a, b) => a.department_id - b.department_id);
-          // console.log('new dpt added list: ', sorteddpt);
+          // console.log('List with the new dpt added: ', sorteddpt);
           setDptList(sorteddpt);
         })
         .catch(error =>{
@@ -139,7 +143,7 @@ export default function Department(){
           }
         });
 
-      e.target.innerText = "Add";
+      e.target.innerText = "Create";
     } else {
       e.target.innerText = "Submit";
     }
@@ -148,14 +152,55 @@ export default function Department(){
   }
 
   /*
-   * Cancel the new department addition - hide the input boxes
+   * Hide the input boxes
    */
-  function cancelAdd(e){
+  function hideCreateInputs(){
+    setIsVisible(false);
+    if (refCreateBtn != null){
+      refCreateBtn.current.innerHTML = "Create";
+    }
+  }
+
+  /*
+   * Update the selected departments
+   */
+   const onUpdateChange = (e, department_id) => {
+     setDptList((prevItems) =>
+       prevItems.map((item) =>
+         item.department_id === department_id ? {...item, [e.target.name]: e.target.value, updated:true} : item
+       )
+     );
+   }
+
+  const updateDpts = (e) =>{
     e.preventDefault();
 
-    setIsVisible(false);
-    if (refAddBtn != null){
-      refAddBtn.current.innerHTML = "Add";
+    const updList = dptList.filter(tdpt => tdpt.updated === true);
+    updList.forEach(tdpt => {
+      let dpt = {
+        department_id: tdpt.department_id,
+        department_name: tdpt.department_name,
+        manager_id: tdpt.manager_id
+      }
+
+      console.log('updating: ', dpt);
+
+      ApiUpdateDpt(dpt)
+      .then(response =>{
+        console.log('Response data:', response.data);
+        console.log('Status:', response.status);
+      })
+      .catch(error =>{
+        console.error(error);
+      })
+    });
+
+    if (updList.length > 0){
+      setDptList((prevItems) =>
+        prevItems.map((item) =>
+          item.updated === true ? {...item, checked:false, updated:false} : item
+        )
+      );
     }
   }
 
@@ -243,7 +288,10 @@ export default function Department(){
           <tr>
             <td></td>
             <td>Department ID</td>
-            <td><input type="number" name="dptId" onChange={(e) => setDptId(e.target.value)} /></td>
+            <td><input type="number"
+              name="dptId"
+              onChange={(e) => setDptId(e.target.value)} />
+            </td>
             <td><button onClick={searchDpt}>Search</button> </td>
           </tr>
           <tr>
@@ -259,15 +307,31 @@ export default function Department(){
           {
             dptList && dptList.map((dpt, index) => (
               <tr className="contents" key={index}>
+                {/* Checkbox Column */}
                 <td className="contents" >
                   <input type="checkbox"
                     id={dpt.id}
                     checked={dpt.checked}
                     onChange={() => handleCheckboxChange(dpt.id)}/>
                 </td>
+                {/* Department Id Column */}
                 <td className="contents" >{dpt.department_id}</td>
-                <td className="contents" >{dpt.department_name}</td>
-                <td className="contents" >{dpt.manager_id}</td>
+                {/* Department Name Column */}
+                <td className="contents" >
+                  <input type="text"
+                    readOnly={!dpt.checked}
+                    name="department_name"
+                    value={dpt.department_name}
+                    onChange={(e)=>onUpdateChange(e, dpt.department_id)} />
+                </td>
+                {/* Manager Id Column */}
+                <td className="contents" >
+                  <input type="number"
+                    readOnly={!dpt.checked}
+                    name="manager_id"
+                    value={dpt.manager_id}
+                    onChange={(e)=>onUpdateChange(e, dpt.department_id)} />
+                </td>
               </tr>
               )
             )
@@ -277,15 +341,15 @@ export default function Department(){
             {isVisible && (
               <tr>
                 <td></td>
-                <td><input type="number" variant='flushed' name="department_id" value={newDpt.department_id} onChange={onChange} /> </td>
-                <td><input type="text" variant='flushed' name="department_name" value={newDpt.department_name} onChange={onChange} /> </td>
-                <td><input type="number" variant='flushed' name="manager_id" value={newDpt.manager_id} onChange={onChange} /> </td>
+                <td><input className="forCreate" type="number" variant='flushed' name="department_id" value={newDpt.department_id} onChange={onChange} /> </td>
+                <td><input className="forCreate" type="text" variant='flushed' name="department_name" value={newDpt.department_name} onChange={onChange} /> </td>
+                <td><input className="forCreate" type="number" variant='flushed' name="manager_id" value={newDpt.manager_id} onChange={onChange} /> </td>
               </tr>
             )}
             <tr>
               <td></td>
-              <td><button ref={refAddBtn} onClick={addDpt}>Add</button> </td>
-              <td><button onClick={cancelAdd}>Cancel</button> </td>
+              <td><button ref={refCreateBtn} onClick={CreateDpt}>Create</button> </td>
+              <td><button onClick={updateDpts}>Update</button> </td>
               <td><button onClick={deleteDpts}>Delete</button> </td>
             </tr>
         </tfoot>

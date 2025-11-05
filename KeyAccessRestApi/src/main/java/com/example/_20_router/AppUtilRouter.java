@@ -31,7 +31,7 @@ public class AppUtilRouter {
 	public RouterFunction<ServerResponse> route() {
 
 		return RouterFunctions
-				.route(GET(AppConstant.APPUTIL_ROOT+AppConstant.API_GEN_KEY)
+				.route(GET(AppConstant.APPUTIL_ROOT + AppConstant.API_GEN_KEY)
 				.and(accept(MediaType.APPLICATION_JSON)), this::generateAesKey);
 	}
 	

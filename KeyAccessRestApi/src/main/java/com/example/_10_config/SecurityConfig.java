@@ -1,5 +1,6 @@
 package com.example._10_config;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +30,7 @@ import com.example._90_util.AppConstant;
 import reactor.core.publisher.Mono;
 /**
  * Set up origins which are allowed to call the REST APIs
+ * Implement a custom filter to perform API key based authentication 
  * <p>
  * Another option, using @CrossOrigin annotation at class-level, should be able to fulfill 
  * the same function.
@@ -70,7 +72,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("*"); // Allow all origins for example
+        config.addAllowedOrigin("http://localhost:3000"); // "*": Allow all origins
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         source.registerCorsConfiguration("/**", config);
@@ -81,7 +83,8 @@ public class SecurityConfig {
 	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 		AuthenticationWebFilter authenticationWebFilter = 
 			new AuthenticationWebFilter(reactiveAuthenticationManager());
-		authenticationWebFilter.setServerAuthenticationConverter(serverAuthenticationConverter());
+		authenticationWebFilter.setServerAuthenticationConverter(
+				serverAuthenticationConverter());
 
 //        // Define a custom WebFilter
 //        WebFilter customFilter = (exchange, chain) -> {
@@ -89,17 +92,19 @@ public class SecurityConfig {
 //            // Perform custom logic here
 //            return chain.filter(exchange);
 //        };
-        
-		http.csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF for API key based auth
-				.authorizeExchange(exchanges -> exchanges
-                        .pathMatchers(AppConstant.APPUTIL_ROOT + "/**").permitAll() // App Utility endpoint
-                        .anyExchange().authenticated() // All other endpoints require authentication
-				)
-				.addFilterAt(authenticationWebFilter, SecurityWebFiltersOrder.AUTHENTICATION)
-				.httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
-				.formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                ;        
-        return http.build();
+		
+		// Disable CSRF for API key based auth
+		http.csrf(ServerHttpSecurity.CsrfSpec::disable);
+		http.authorizeExchange(exchanges -> exchanges
+			// App Utility endpoint
+			.pathMatchers(AppConstant.APPUTIL_ROOT + "/**").permitAll()
+			// All other endpoints require authentication
+			.anyExchange().authenticated());
+		http.addFilterAt(authenticationWebFilter,SecurityWebFiltersOrder.AUTHENTICATION)
+			.httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+			.formLogin(ServerHttpSecurity.FormLoginSpec::disable);
+		
+		return http.build();
     }
 
 	@Bean
@@ -107,24 +112,32 @@ public class SecurityConfig {
     		System.out.println(">> entering reactiveAuthenticationManager");
     		
     		//
-    		// Get all the valid keys from the database
+    		// Get the valid keys from the database
     		List<String> validApiKeys = apiKeyDao.getApiKeys();
     		
     		return authentication -> {
     			String apiKey = authentication.getCredentials().toString();
+    			
+    			System.out.println(">> reactiveAuthenticationManager Key: %s".formatted(apiKey));
+    			System.out.print(authentication);
+    			
     			if (validApiKeys.contains(apiKey)) {
-    				return Mono.just(new UsernamePasswordAuthenticationToken(apiKey, apiKey,
-    						Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
+    				return Mono.just(
+    						new UsernamePasswordAuthenticationToken(apiKey, 
+    								apiKey,
+    								Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))));
     			}
     			return Mono.error(new BadCredentialsException("Invalid API Key"));
     		};
 	}
 
-    @Bean
-    public ServerAuthenticationConverter serverAuthenticationConverter() {
+	@Bean
+	public ServerAuthenticationConverter serverAuthenticationConverter() {
     		System.out.println(">> entering serverAuthenticationConverter");
-    		return exchange -> Mono.justOrEmpty(exchange.getRequest().getHeaders().getFirst(AppConstant.API_KEY_HEADER))
-    				.map(apiKey -> new UsernamePasswordAuthenticationToken(apiKey, apiKey));
-    }
+    		return exchange -> 
+    			Mono.justOrEmpty(
+    				exchange.getRequest().getHeaders().getFirst(AppConstant.API_KEY_HEADER))
+    			.map(apiKey -> new UsernamePasswordAuthenticationToken(apiKey, apiKey));
+	}
 
 }

@@ -1,4 +1,4 @@
-/* endpoint of the back app */
+/* Root endpoint of the REST APIs */
 export const RestEndpoint = 'http://localhost:9090/rest';
 // export const RestEndpoint = 'https://localhost:8443/rest';
 export const ApiKeyHeader = "Api-Key";
